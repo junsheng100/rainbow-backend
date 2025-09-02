@@ -51,12 +51,12 @@ spring:
 
 logging:
   operation:
-    url: /api/oper/log/receive
+    url: /oper/log/receive
     enabled: true
     retention-days: 90
 
 jwt:
-  url: http://localhost:8081/api/auth/info
+  url: /auth/info
   header: Authorization
   secret: Ou0T8nAGzsF32aah2vwAU1sT+lzi/UMzWXYmAYvkZF4=
   access-token-validity-in-seconds: 86400  # 24小时
