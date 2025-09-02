@@ -1,0 +1,140 @@
+# Rainbow Backend Docker Compose 配置
+# 作者: jackson.liu
+# 版本: 1.0.0
+
+version: '3.8'
+
+services:
+  # Rainbow Backend 应用服务
+  rainbow-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rainbow-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/db_rainbow?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      - SPRING_DATASOURCE_USERNAME=rainbow
+      - SPRING_DATASOURCE_PASSWORD=rainbow123
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_REDIS_PASSWORD=redis123
+      - JWT_SECRET=your_jwt_secret_key_here
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+      - ./upload:/app/upload
+      - ./docker/config:/app/config
+    networks:
+      - rainbow-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # MySQL 数据库服务
+  mysql:
+    image: mysql:8.0
+    container_name: rainbow-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: db_rainbow
+      MYSQL_USER: rainbow
+      MYSQL_PASSWORD: rainbow123
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+      - ./docker/mysql/conf:/etc/mysql/conf.d
+    networks:
+      - rainbow-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Redis 缓存服务
+  redis:
+    image: redis:6-alpine
+    container_name: rainbow-redis
+    command: redis-server --requirepass redis123 --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - rainbow-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "redis123", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Nginx 反向代理服务（可选）
+  kkfileview:
+    image: keking/kkfileview:latest
+    container_name: rainbow-kkfileview
+    ports:
+      - "8012:8012"
+    environment:
+      - KK_CONTEXT_PATH=/
+      - KK_OFFICE_PREVIEW_TYPE=libreoffice
+      - KK_OFFICE_PREVIEW_MAX_TASKS=20
+      - KK_OFFICE_PREVIEW_TASK_QUEUE_TIMEOUT=3000
+    volumes:
+      - ./kkfileview/config:/opt/kkFileView/config
+      - ./kkfileview/logs:/opt/kkFileView/logs
+      - ./kkfileview/cache:/opt/kkFileView/config
+    networks:
+      - rainbow-network
+    restart: unless-stopped
+  
+  nginx:
+    image: nginx:alpine
+    container_name: rainbow-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./docker/nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - rainbow-backend
+      - kkfileview
+    networks:
+      - rainbow-network
+    restart: unless-stopped
+    profiles:
+      - nginx
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  rainbow-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

@@ -1,0 +1,38 @@
+server:
+  port: 8080
+project:
+  version: 1.0.0
+
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  config:
+    use-legacy-processing: false
+  application:
+    name: rainbow-system
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size: 200MB
+      # 设置总上传的文件大小
+      max-request-size: 200MB
+
+
+logging:
+  operation:
+    url: /oper/log/receive
+    enabled: true
+    retention-days: 90
+
+job:
+  operation:
+    url: /task/log/receive
+    enabled: true
+    retention-days: 90

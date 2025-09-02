@@ -1,0 +1,78 @@
+
+
+spring:
+  web:
+    resources:
+      static-locations: file:${user.home}/upload/
+  mvc:
+    static-path-pattern: /**
+    cors:
+      allowed-origins: "*"
+      allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
+      allowed-headers: "*"
+      allow-credentials: true
+      max-age: 3600
+  datasource:
+    url: jdbc:mysql://localhost:3306/your_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: your-name
+    password: your-password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  cache:
+    type: redis
+    cache-names:
+      - wallpaper:today
+      - wallpaper:latest
+      - wallpaper:featured
+      - wallpaper:popular
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:your-password}
+    database: 0
+    timeout: 10000
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+  security:
+    user:
+      name: your-name
+      password: you-secret-password
+      roles: ADMIN
+  freemarker:
+    settings:
+      recognize_standard_file_extensions: true
+
+logging:
+  operation:
+    url: /api/oper/log/receive
+    enabled: true
+    retention-days: 90
+
+jwt:
+  url: http://ip-address:port/api/auth/info
+  header: Authorization
+  secret: your-base64-secret
+  access-token-validity-in-seconds: 86400  # 24小时
+  refresh-token-validity-in-seconds: 604800  # 24小时 *7
+
+
+# Swagger UI 配置
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+    tags-sorter: alpha
+    filter: true
+    doc-expansion: none
