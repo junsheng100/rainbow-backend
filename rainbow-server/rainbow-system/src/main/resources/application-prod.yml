@@ -53,19 +53,13 @@ spring:
     settings:
       recognize_standard_file_extensions: true
 
-logging:
-  operation:
-    url: /api/oper/log/receive
-    enabled: true
-    retention-days: 90
 
 jwt:
-  url: http://ip-address:port/api/auth/info
-  header: Authorization
   secret: your-base64-secret
-  access-token-validity-in-seconds: 86400  # 24小时
-  refresh-token-validity-in-seconds: 604800  # 24小时 *7
 
+logging:
+  operation:
+    enabled: false
 
 # Swagger UI 配置
 springdoc:

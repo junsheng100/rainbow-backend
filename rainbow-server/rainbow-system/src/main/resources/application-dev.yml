@@ -28,7 +28,7 @@ spring:
   redis:
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
-    password: ${REDIS_PASSWORD:QSEE*&WCas@3scA}
+    password: ${REDIS_PASSWORD:your_redis_password}
     database: 0
     timeout: 10000
     lettuce:
@@ -46,21 +46,12 @@ spring:
     settings:
       recognize_standard_file_extensions: true
 
-
-
+jwt:
+  secret: ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGH
 
 logging:
   operation:
-    url: /oper/log/receive
-    enabled: true
-    retention-days: 90
-
-jwt:
-  url: /auth/info
-  header: Authorization
-  secret: Ou0T8nAGzsF32aah2vwAU1sT+lzi/UMzWXYmAYvkZF4=
-  access-token-validity-in-seconds: 86400  # 24小时
-  refresh-token-validity-in-seconds: 604800  # 24小时 *7
+    enabled: false
 
 # Swagger UI 配置
 springdoc:

@@ -1,5 +1,12 @@
 server:
   port: 8080
+  servlet:
+    context-path: /api
+    multipart:
+      # 单个文件大小
+      max-file-size: 200MB
+      # 设置总上传的文件大小
+      max-request-size: 200MB
 project:
   version: 1.0.0
 
@@ -17,22 +24,29 @@ spring:
     name: rainbow-system
   profiles:
     active: dev
-  servlet:
-    multipart:
-      # 单个文件大小
-      max-file-size: 200MB
-      # 设置总上传的文件大小
-      max-request-size: 200MB
+  security:
+    user:
+      name: admin
+      password: none
+      roles: ADMIN
+  freemarker:
+    settings:
+      recognize_standard_file_extensions: true
 
+jwt:
+  url: /api/auth/info
+  header: Authorization
+  access-token-validity-in-seconds: 86400  # 24小时
+  refresh-token-validity-in-seconds: 604800  # 24小时 *7
 
 logging:
   operation:
-    url: /oper/log/receive
+    url: /api/oper/log/receive
     enabled: true
     retention-days: 90
 
 job:
   operation:
-    url: /task/log/receive
+    url: /api/task/log/receive
     enabled: true
     retention-days: 90
