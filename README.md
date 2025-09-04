@@ -68,6 +68,7 @@ rainbow-backend/
 - **项目地址**: https://github.com/junsheng100/rainbow-backend
 - **问题反馈**: https://github.com/junsheng100/rainbow-backend/issues
 - **邮箱联系**: junsheng100@foxmail.com
+- **QQ**: 304299340
 
 ## 📝 文档特点
 
