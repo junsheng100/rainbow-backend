@@ -1,10 +1,11 @@
-package com.rainbow.base.aspect;
+package com.rainbow.aspect;
 
 import com.rainbow.base.annotation.JobTask;
 import com.rainbow.base.client.JobTaskClient;
 import com.rainbow.base.exception.BaseException;
 import com.rainbow.base.model.vo.TaskLogVo;
 import com.rainbow.base.utils.StringUtils;
+import com.rainbow.scheduler.service.TaskLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -26,15 +27,12 @@ import java.util.Date;
 public class JobTaskAspect {
 
   @Autowired
-  private JobTaskClient taskClient;
+  private TaskLogService taskLogService;
 
   @ResponseBody
   @Around("execute()")
   public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
     TaskLogVo vo = getTaskLogVo(joinPoint);
-    ;
-    Date startTime = null;
-    Date endTime = null;
     try {
 
       /// /////////////////////////////
@@ -46,9 +44,15 @@ public class JobTaskAspect {
       log.error(e.getMessage());
       throw e;
     } finally {
-      taskClient.sendLogMess(vo);
+      saveLogMess(vo);
     }
 
+  }
+
+
+  private void saveLogMess(TaskLogVo vo) {
+    setEndTime(vo);
+    taskLogService.receive(vo);
   }
 
   private void setEndTime(TaskLogVo vo) {

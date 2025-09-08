@@ -47,20 +47,6 @@ spring:
       recognize_standard_file_extensions: true
 
 
-
-
-logging:
-  operation:
-    url: /api/oper/log/receive
-    enabled: true
-    retention-days: 90
-
-job:
-  operation:
-    url: /api/task/log/receive
-    enabled: true
-    retention-days: 90
-
 # Swagger UI 配置
 springdoc:
   api-docs:

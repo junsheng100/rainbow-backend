@@ -1,4 +1,4 @@
-package com.rainbow.base.aspect;
+package com.rainbow.aspect;
 
 
 import com.alibaba.fastjson2.JSON;
@@ -9,8 +9,9 @@ import com.rainbow.base.constant.DataConstant;
 import com.rainbow.base.exception.BaseException;
 import com.rainbow.base.model.base.Result;
 import com.rainbow.base.model.vo.OperLogVo;
-import com.rainbow.base.utils.AddressUtils;
 import com.rainbow.base.utils.IPUtils;
+import com.rainbow.system.entity.SysOperLog;
+import com.rainbow.system.service.SysOperLogService;
 import eu.bitwalker.useragentutils.UserAgent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,7 +36,7 @@ import java.util.List;
 
 @Aspect
 @Component
-@Order(1)
+@Order(100)
 @Slf4j
 public class OperLogAspect {
 
@@ -43,8 +44,9 @@ public class OperLogAspect {
   private HttpServletRequest request;
   @Autowired
   private UserClient userClient;
+
   @Autowired
-  private OperLogClient logClient;
+  private SysOperLogService logService;
 
 
   @ResponseBody
@@ -64,7 +66,7 @@ public class OperLogAspect {
       if (null != vo) {
         vo.setErrorMsg(e.getMessage());
         vo.setErrCode(e.getCode());
-        sendLogMess(vo);
+        saveLogMess(vo);
 
         return Result.error(e.getCode(), e.getMessage());
       }
@@ -72,14 +74,14 @@ public class OperLogAspect {
       if (null != vo) {
         Long time = System.currentTimeMillis() - vo.getOperTime().getTime();
         vo.setCostTime(time);
-        sendLogMess(vo);
+        saveLogMess(vo);
       }
     }
     return data;
   }
 
-  private void sendLogMess(OperLogVo vo) {
-    logClient.sendLogMess(vo);
+  private void saveLogMess(OperLogVo vo) {
+    logService.receive(vo);
   }
 
 
