@@ -7,6 +7,7 @@ import com.rainbow.base.api.ApiResult;
 import com.rainbow.base.client.UserClient;
 import com.rainbow.base.config.JwtConfig;
 import com.rainbow.base.entity.BaseEntity;
+import com.rainbow.base.exception.NoLoginException;
 import com.rainbow.base.model.base.PageData;
 import com.rainbow.base.model.base.Result;
 import com.rainbow.base.model.domain.LoginUser;
@@ -22,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
-import javax.security.auth.message.AuthException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.Serializable;
@@ -109,7 +109,7 @@ public class BaseController<Entity extends BaseEntity, ID extends Serializable, 
   }
 
 
-  protected boolean isToken() throws AuthException {
+  protected boolean isToken() throws NoLoginException {
     String token = request.getHeader(config.getHeader());
 
     log.info("###### profile:", token);
@@ -117,11 +117,11 @@ public class BaseController<Entity extends BaseEntity, ID extends Serializable, 
     // 验证令牌
     Assert.notNull(token, "无效的令牌");
     if (StringUtils.isBlank(token))
-      throw new AuthException("无效的令牌");
+      throw new NoLoginException("无效的令牌");
     // 使用统一的方法处理 token
 
     if (!jwtTokenUtil.validateToken(token))
-      throw new AuthException("无效的令牌");
+      throw new NoLoginException("无效的令牌");
 
     return true;
   }

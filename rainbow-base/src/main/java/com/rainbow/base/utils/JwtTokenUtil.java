@@ -171,6 +171,11 @@ public class JwtTokenUtil {
     return config.getAccessTokenValidityInSeconds();
   }
 
+  public JwtConfig getConfig() {
+    return config;
+  }
 
-
+  public void setConfig(JwtConfig config) {
+    this.config = config;
+  }
 }

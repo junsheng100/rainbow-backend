@@ -13,6 +13,7 @@ import com.rainbow.user.entity.UserInfo;
 import com.rainbow.user.entity.UserPasswd;
 import com.rainbow.user.model.LoginRequest;
 import com.rainbow.user.model.LoginResponse;
+import com.rainbow.user.service.AuthService;
 import com.rainbow.user.service.RouterService;
 import com.rainbow.user.service.UserInfoService;
 import com.rainbow.user.service.UserPasswdService;
@@ -62,6 +63,9 @@ public class AuthController {
   @Autowired
   private SysLoginService loginService;
 
+  @Autowired
+  private AuthService authService;
+
 
 
   @PostMapping("/login")
@@ -86,6 +90,9 @@ public class AuthController {
     LoginUser loginUser = new LoginUser();
     BeanUtils.copyProperties(user, loginUser, CommonUtils.getNullPropertyNames(user));
 
+
+    JwtConfig jwtConfig = authService.getJwtConfig();
+    jwtTokenUtil.setConfig(jwtConfig);
     // 生成token
     String accessToken = jwtTokenUtil.generateAccessToken(loginUser);
     String refreshToken = jwtTokenUtil.generateRefreshToken(loginUser);

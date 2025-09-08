@@ -10,6 +10,7 @@ import com.rainbow.base.exception.BaseException;
 import com.rainbow.base.model.base.Result;
 import com.rainbow.base.model.vo.OperLogVo;
 import com.rainbow.base.utils.AddressUtils;
+import com.rainbow.base.utils.IPUtils;
 import eu.bitwalker.useragentutils.UserAgent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -125,7 +126,7 @@ public class OperLogAspect {
 
       String[] parameterNames = signature.getParameterNames();
       Object[] parameterValues = joinPoint.getArgs();
-      String ip = AddressUtils.getIpAddress();
+      String ip = IPUtils.getIpAddr(request);
       UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
       // 获取客户端操作系统
       String os = userAgent.getOperatingSystem().getName();

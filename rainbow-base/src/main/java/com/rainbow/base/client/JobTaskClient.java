@@ -1,8 +1,6 @@
 package com.rainbow.base.client;
 
 import com.rainbow.base.config.JobConfig;
-import com.rainbow.base.config.LogConfig;
-import com.rainbow.base.model.vo.OperLogVo;
 import com.rainbow.base.model.vo.TaskLogVo;
 import com.rainbow.base.utils.IPUtils;
 import lombok.SneakyThrows;

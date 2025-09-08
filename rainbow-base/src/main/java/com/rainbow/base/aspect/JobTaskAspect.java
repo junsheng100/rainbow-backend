@@ -42,10 +42,8 @@ public class JobTaskAspect {
       /// /////////////////////////////
       return data;
     } catch (BaseException e) {
-
       e.printStackTrace();
       log.error(e.getMessage());
-
       throw e;
     } finally {
       taskClient.sendLogMess(vo);

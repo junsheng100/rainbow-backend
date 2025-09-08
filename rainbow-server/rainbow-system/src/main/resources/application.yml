@@ -33,20 +33,6 @@ spring:
     settings:
       recognize_standard_file_extensions: true
 
-jwt:
-  url: /api/auth/info
-  header: Authorization
-  access-token-validity-in-seconds: 86400  # 24小时
-  refresh-token-validity-in-seconds: 604800  # 24小时 *7
 
-logging:
-  operation:
-    url: /api/oper/log/receive
-    enabled: true
-    retention-days: 90
 
-job:
-  operation:
-    url: /api/task/log/receive
-    enabled: true
-    retention-days: 90
+

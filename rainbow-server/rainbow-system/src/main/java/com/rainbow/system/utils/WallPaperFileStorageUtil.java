@@ -3,7 +3,8 @@ package com.rainbow.system.utils;
 import com.rainbow.system.entity.SysConfig;
 import com.rainbow.system.resource.SysConfigDao;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.codec.binary.Base64;
+
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;

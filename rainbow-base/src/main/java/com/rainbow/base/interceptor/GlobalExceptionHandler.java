@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
           DataException.class,
           NoLoginException.class,
           AuthenticationException.class,
-          AuthException.class,
+          AuthRoleException.class,
           AccessDeniedException.class,
           ResponseStatusException.class,
           RepeatException.class,
@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
 
     HttpCode httpCode = null;
 
-    if (e instanceof AuthException   ) {
+    if (e instanceof AuthRoleException) {
       httpCode = HttpCode.FORBIDDEN;
       message = StringUtils.isBlank(message) ? httpCode.getReasonPhrase() : message;
     } else if (e instanceof NoLoginException) {

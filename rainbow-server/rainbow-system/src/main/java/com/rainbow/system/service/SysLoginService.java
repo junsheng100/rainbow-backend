@@ -16,7 +16,6 @@ public interface SysLoginService extends BaseService<SysLogin,Long> {
 
   Boolean cleanAll();
 
-
   Boolean saveUserLogin(String userId);
 
   Boolean saveUserLogout(String userId);

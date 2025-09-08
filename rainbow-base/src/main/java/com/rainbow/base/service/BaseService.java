@@ -4,7 +4,6 @@ import com.rainbow.base.api.ApiInfo;
 import com.rainbow.base.entity.BaseEntity;
 import com.rainbow.base.model.domain.LoginUser;
 
-import javax.security.auth.message.AuthException;
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,7 +11,7 @@ public interface BaseService<Entity extends BaseEntity,ID extends Serializable  
 
   LoginUser getLoginUser();
 
-  boolean isAdmin() throws AuthException;
+  boolean isAdmin() ;
 
   boolean removeInBatch(List<ID> ids);
 

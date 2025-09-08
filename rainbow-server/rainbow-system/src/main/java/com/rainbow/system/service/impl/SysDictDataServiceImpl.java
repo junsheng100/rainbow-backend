@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,4 +79,8 @@ public class SysDictDataServiceImpl extends BaseServiceImpl<SysDictData,Long, Sy
     });
   }
 
+  @Override
+  public List<SysDictData> findByType(String type) {
+    return StringUtils.isBlank(type)?  Collections.emptyList() : baseDao.findByDictType(type);
+  }
 }

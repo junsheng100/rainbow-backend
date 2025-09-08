@@ -63,7 +63,7 @@ public class AddressUtils {
     String ip = null;
 
     try {
-      ip = IPUtils.getHostIp();
+      ip = IPUtils.getIpAddr();
       if (!IPUtils.internalIp(ip)) {
         return ip;
       }

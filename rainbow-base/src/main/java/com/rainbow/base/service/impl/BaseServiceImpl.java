@@ -4,6 +4,7 @@ import com.rainbow.base.client.UserClient;
 import com.rainbow.base.entity.BaseEntity;
 import com.rainbow.base.enums.UserType;
 import com.rainbow.base.exception.BizException;
+import com.rainbow.base.exception.NoLoginException;
 import com.rainbow.base.model.base.PageData;
 import com.rainbow.base.model.domain.LoginUser;
 import com.rainbow.base.model.vo.BaseVo;
@@ -13,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.security.auth.message.AuthException;
 import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -101,10 +101,10 @@ public class BaseServiceImpl<Entity extends BaseEntity, ID extends Serializable,
     return userClient.getLoginUser();
   }
 
-  public boolean isAdmin() throws AuthException {
+  public boolean isAdmin()  {
     LoginUser user = getLoginUser();
     if (null == user)
-      throw new AuthException("请登录系统");
+      throw new NoLoginException("请登录系统");
 
     return UserType.ADMIN.name().equals(user.getUserType());
   }
