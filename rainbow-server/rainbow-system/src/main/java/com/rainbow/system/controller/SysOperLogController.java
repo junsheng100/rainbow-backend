@@ -2,10 +2,12 @@ package com.rainbow.system.controller;
 
 import com.rainbow.base.controller.BaseController;
 import com.rainbow.base.enums.TimeType;
+import com.rainbow.base.model.base.PageData;
 import com.rainbow.base.model.base.Result;
 import com.rainbow.base.model.vo.CommonVo;
 import com.rainbow.base.model.vo.OperLogVo;
 import com.rainbow.system.entity.SysOperLog;
+import com.rainbow.system.model.vo.LogParamVo;
 import com.rainbow.system.model.vo.OperLogData;
 import com.rainbow.system.model.vo.OperLogMonthData;
 import com.rainbow.system.model.vo.OperLogUserData;
@@ -22,6 +24,13 @@ import java.util.List;
 @RequestMapping("/oper/log")
 @Tag(name = "操作日志")
 public class SysOperLogController extends BaseController<SysOperLog, Long, SysOperLogService> {
+
+
+  @Operation(description = "关键词分页查询")
+  @PostMapping("/page/list")
+  public Result<PageData<SysOperLog>> findPageList(@RequestBody CommonVo<LogParamVo> vo) {
+    return Result.success(service.pageList(vo));
+  }
 
 
   @Operation(description = "统计高频的数据")

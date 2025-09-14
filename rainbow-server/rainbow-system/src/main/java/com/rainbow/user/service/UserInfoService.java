@@ -40,4 +40,6 @@ public interface UserInfoService extends BaseService<UserInfo, String> {
   List<String> getUserRoles(String userId) throws AuthException;
 
   List<String> getUserPermissions(String userId);
+
+  void updateProfile(String userId, String  avatar);
 }

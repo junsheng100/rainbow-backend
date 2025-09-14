@@ -7,7 +7,7 @@ import com.rainbow.base.resource.impl.DataManager;
 import com.rainbow.base.service.impl.BaseServiceImpl;
 import com.rainbow.base.utils.ExcelUtils;
 import com.rainbow.base.utils.StringUtils;
-import com.rainbow.system.resource.SysResourceDao;
+import com.rainbow.files.resource.SysResourceDao;
 import com.rainbow.template.entity.TemplateDataType;
 import com.rainbow.template.resource.TemplateDataTypeDao;
 import com.rainbow.template.service.TemplateDataTypeService;

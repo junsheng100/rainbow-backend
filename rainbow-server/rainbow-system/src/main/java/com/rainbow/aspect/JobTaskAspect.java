@@ -1,7 +1,6 @@
 package com.rainbow.aspect;
 
 import com.rainbow.base.annotation.JobTask;
-import com.rainbow.base.client.JobTaskClient;
 import com.rainbow.base.exception.BaseException;
 import com.rainbow.base.model.vo.TaskLogVo;
 import com.rainbow.base.utils.StringUtils;

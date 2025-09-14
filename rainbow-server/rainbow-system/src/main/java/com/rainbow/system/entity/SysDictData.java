@@ -44,6 +44,19 @@ public class SysDictData extends BaseEntity {
     private Long dictSort;
 
     @Column(length = 100)
+    @Schema(title = "数据名称",type = "String")
+    @Search(SELECT = SearchEnum.LIKE)
+    @NotBlank(message = "数据名称")
+    @Size(min = 0, max = 100, message = "字典标签长度不能超过100个字符")
+    private String dictName;
+
+
+    @Transient
+    @Schema(title = "类型名称",type = "String")
+    private String typeName;
+
+
+    @Column(length = 100)
     @Schema(title = "字典标签",type = "String")
     @Search(SELECT = SearchEnum.LIKE)
     @NotBlank(message = "字典标签不能为空")
@@ -64,10 +77,6 @@ public class SysDictData extends BaseEntity {
     @OrderBy(value = Sort.Direction.ASC,INDEX = "98")
     @Size(min = 0, max = 100, message = "字典类型长度不能超过100个字符")
     private String dictType;
-
-    @Transient
-    @Schema(title = "字典名称",type = "String")
-    private String dictName;
 
     @Schema(title = "是否默认（Y是 N否）",type = "String")
     @Column(length = 1)

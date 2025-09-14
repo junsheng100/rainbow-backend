@@ -7,6 +7,7 @@ import com.rainbow.base.model.base.PageData;
 import com.rainbow.base.model.base.Result;
 import com.rainbow.base.model.vo.CommonVo;
 import com.rainbow.system.entity.SysLogin;
+import com.rainbow.system.model.vo.LogParamVo;
 import com.rainbow.system.model.vo.LoginData;
 import com.rainbow.system.service.SysLoginService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +20,12 @@ import java.util.List;
 @RequestMapping("/login/user")
 @Tag(name = "登陆日志")
 public class SysLoginController extends BaseController<SysLogin, Long, SysLoginService> {
+
+  @Operation(description = "关键词分页查询")
+  @PostMapping("/page/list")
+  public Result<PageData<SysLogin>> findPageList(@RequestBody CommonVo<LogParamVo> vo) {
+    return Result.success(service.pageList(vo));
+  }
 
   @Operation(description = "按城市统计")
   @GetMapping("/total/city")

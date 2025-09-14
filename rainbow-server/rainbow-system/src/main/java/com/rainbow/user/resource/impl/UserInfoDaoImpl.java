@@ -5,6 +5,7 @@ import com.rainbow.base.exception.DataException;
 import com.rainbow.base.model.vo.BaseVo;
 import com.rainbow.base.resource.impl.BaseDaoImpl;
 import com.rainbow.user.entity.UserInfo;
+import com.rainbow.user.model.UserProfile;
 import com.rainbow.user.repository.UserInfoRepository;
 import com.rainbow.user.resource.UserInfoDao;
 import lombok.extern.slf4j.Slf4j;
@@ -99,6 +100,15 @@ public class UserInfoDaoImpl extends BaseDaoImpl<UserInfo, String, UserInfoRepos
   @Override
   public List<UserInfo> findInUserId(List<String> idList) {
     return CollectionUtils.isEmpty(idList) ? Collections.emptyList() : jpaRepository.findInUserId(idList);
+  }
+
+  @Override
+  public void updateProfile(String userId, String avatar) {
+    if(StringUtils.isNotBlank(userId)){
+      if(StringUtils.isNotBlank(avatar)){
+        jpaRepository.updateProfile(userId,avatar);
+      }
+    }
   }
 
 

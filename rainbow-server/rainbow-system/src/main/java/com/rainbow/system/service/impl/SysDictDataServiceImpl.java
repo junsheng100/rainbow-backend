@@ -63,7 +63,7 @@ public class SysDictDataServiceImpl extends BaseServiceImpl<SysDictData,Long, Sy
   public void convertData(SysDictData entity) {
     if (null != entity) {
       SysDictType type = StringUtils.isBlank(entity.getDictType()) ? null : typeDao.findByDictType(entity.getDictType());
-      entity.setDictName(null == type ? "" : type.getDictName());
+      entity.setTypeName(null == type ? "" : type.getDictName());
     }
   }
 
@@ -74,8 +74,8 @@ public class SysDictDataServiceImpl extends BaseServiceImpl<SysDictData,Long, Sy
     List<SysDictType> typeList = typeDao.findInDictType(dictTypeList);
 
     list.stream().forEach(data -> {
-      String dictName = typeList.stream().filter(t -> data.getDictType().equals(t.getDictType())).map(SysDictType::getDictName).distinct().collect(Collectors.joining(ChartEnum.COMMA.getCode()));
-      data.setDictName(dictName);
+      String typeName = typeList.stream().filter(t -> data.getDictType().equals(t.getDictType())).map(SysDictType::getDictName).distinct().collect(Collectors.joining(ChartEnum.COMMA.getCode()));
+      data. setTypeName(typeName);
     });
   }
 

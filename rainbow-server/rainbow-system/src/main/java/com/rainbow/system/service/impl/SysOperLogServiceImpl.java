@@ -2,12 +2,16 @@ package com.rainbow.system.service.impl;
 
 import com.rainbow.base.enums.TimeType;
 import com.rainbow.base.enums.UseStatus;
+import com.rainbow.base.model.base.PageData;
+import com.rainbow.base.model.vo.CommonVo;
 import com.rainbow.base.model.vo.OperLogVo;
+import com.rainbow.base.resource.impl.DataManager;
 import com.rainbow.base.service.impl.BaseServiceImpl;
 import com.rainbow.base.utils.CommonUtils;
 import com.rainbow.base.utils.DateTools;
 import com.rainbow.system.entity.SysIPData;
 import com.rainbow.system.entity.SysOperLog;
+import com.rainbow.system.model.vo.LogParamVo;
 import com.rainbow.system.model.vo.OperLogData;
 import com.rainbow.system.model.vo.OperLogMonthData;
 import com.rainbow.system.model.vo.OperLogUserData;
@@ -21,6 +25,8 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,9 +40,13 @@ public class SysOperLogServiceImpl extends BaseServiceImpl<SysOperLog, Long, Sys
   @Autowired
   private SysIPDataDao ipAddressDao;
 
+  @Autowired
+  protected DataManager<SysOperLog> dataManager;
+
+//  @Async
   @Override
   public Boolean receive(OperLogVo vo) {
-
+//    saveReceive(vo);
     if (null == vo)
       return false;
     Runnable runnable = new Runnable() {
@@ -177,6 +187,14 @@ public class SysOperLogServiceImpl extends BaseServiceImpl<SysOperLog, Long, Sys
 
 
     return list;
+  }
+
+  @Override
+  public PageData<SysOperLog> pageList(CommonVo<LogParamVo> vo) {
+    Pageable pageable = dataManager.getCommonPageable(vo, SysOperLog.class);
+    PageData<SysOperLog> pageData = baseDao.pageList(vo.getData(), pageable);
+
+    return pageData;
   }
 
   private Date initDay(Date start, Date end, TimeType type) {

@@ -1,9 +1,6 @@
 package com.rainbow.user.service;
 
 import com.rainbow.base.config.JwtConfig;
-import com.rainbow.user.entity.UserInfo;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * @Author：QQ:304299340

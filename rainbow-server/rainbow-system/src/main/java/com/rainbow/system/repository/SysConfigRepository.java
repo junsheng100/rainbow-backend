@@ -4,6 +4,8 @@ import com.rainbow.base.repository.BaseRepository;
 import com.rainbow.system.entity.SysConfig;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface SysConfigRepository extends BaseRepository<SysConfig, Long> {
 
   @Query("select t from SysConfig t where trim(t.configKey) = trim(?1) ")
@@ -11,4 +13,8 @@ public interface SysConfigRepository extends BaseRepository<SysConfig, Long> {
 
   @Query("select t.configValue from SysConfig t where trim(t.configKey)  = trim(?1) ")
   String findValueByKey(String configKey);
+
+  @Query("select t.configValue from SysConfig t where trim(t.configKey)  like concat('%', ?1,'%') ")
+  List<SysConfig> likeConfigKey(String key);
+
 }

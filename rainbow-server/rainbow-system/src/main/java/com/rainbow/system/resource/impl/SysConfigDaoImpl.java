@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import java.util.List;
+
 @Slf4j
 @Component
 public class SysConfigDaoImpl extends BaseDaoImpl<SysConfig, Long, SysConfigRepository> implements SysConfigDao {
@@ -34,5 +36,10 @@ public class SysConfigDaoImpl extends BaseDaoImpl<SysConfig, Long, SysConfigRepo
       fileBasePath = fileBasePath.replace("${user.dir}", System.getProperty("user.dir"));
 
     return fileBasePath;
+  }
+
+  @Override
+  public List<SysConfig> findConfigValue(String key) {
+    return StringUtils.isBlank(key)?null:jpaRepository.likeConfigKey(key);
   }
 }

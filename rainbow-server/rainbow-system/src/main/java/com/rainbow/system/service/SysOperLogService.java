@@ -1,9 +1,12 @@
 package com.rainbow.system.service;
 
 import com.rainbow.base.enums.TimeType;
+import com.rainbow.base.model.base.PageData;
+import com.rainbow.base.model.vo.CommonVo;
 import com.rainbow.base.model.vo.OperLogVo;
 import com.rainbow.base.service.BaseService;
 import com.rainbow.system.entity.SysOperLog;
+import com.rainbow.system.model.vo.LogParamVo;
 import com.rainbow.system.model.vo.OperLogData;
 import com.rainbow.system.model.vo.OperLogMonthData;
 import com.rainbow.system.model.vo.OperLogUserData;
@@ -23,4 +26,6 @@ public interface SysOperLogService extends BaseService<SysOperLog,Long> {
   List<OperLogMonthData> totalMonthList(Date start,Date end,Integer top);
 
   List<OperLogUserData> totalUserList(Date start, Date end, TimeType type);
+
+  PageData<SysOperLog> pageList(CommonVo<LogParamVo> vo);
 }

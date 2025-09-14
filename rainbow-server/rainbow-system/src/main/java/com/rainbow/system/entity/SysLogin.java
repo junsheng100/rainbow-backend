@@ -13,7 +13,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * 系统访问记录表 sys_logininfor
@@ -88,16 +87,5 @@ public class SysLogin extends BaseEntity {
   @Schema(title = "时间", type = "String")
   private LocalDateTime operTime;
 
-  @Transient
-  @Search(SELECT = SearchEnum.GREATER_EQ, COLUMN = "operTime")
-  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-  @Schema(title = "开始时间", type = "String")
-  private Date startTime;
-
-  @Transient
-  @Search(SELECT = SearchEnum.LESS_EQ, COLUMN = "operTime")
-  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-  @Schema(title = "结束时间", type = "String")
-  private Date endTime;
 
 }

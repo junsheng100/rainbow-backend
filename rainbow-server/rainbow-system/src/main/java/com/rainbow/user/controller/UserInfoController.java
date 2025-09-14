@@ -7,14 +7,13 @@ import com.rainbow.base.exception.BizException;
 import com.rainbow.base.exception.NoLoginException;
 import com.rainbow.base.model.base.Result;
 import com.rainbow.base.model.domain.LoginUser;
-import com.rainbow.system.service.SysResourceService;
 import com.rainbow.user.entity.UserInfo;
+import com.rainbow.user.model.UserProfile;
 import com.rainbow.user.model.UserTotal;
 import com.rainbow.user.service.UserInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,10 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/user")
 @Tag(name = "用户管理")
 public class UserInfoController extends BaseController<UserInfo, String, UserInfoService> {
-
-
-  @Autowired
-  private SysResourceService resourceService;
 
 
   @GetMapping(value = "/profile")
@@ -41,6 +36,25 @@ public class UserInfoController extends BaseController<UserInfo, String, UserInf
       // 获取用户信息
       String userId = super.getUserId();
       UserInfo user = service.get(userId);
+      user.setPassword("N/A");
+
+      return Result.success(user);
+    } catch (Exception e) {
+      log.error("Error getting user info", e);
+      throw new NoLoginException("获取用户信息失败: " + e.getMessage());
+    }
+  }
+
+  @PutMapping(value = "/{userId}/profile")
+  @Operation(summary = "用户信息")
+  public Result<UserInfo> updateProfile(@PathVariable("userId") String userId,
+                                        @RequestBody UserProfile profile) {
+    try {
+      UserInfo user = service.get(userId);
+      user.setAvatar(profile.getAvatar());
+
+      service.store(user);
+
       user.setPassword("N/A");
 
       return Result.success(user);
@@ -133,7 +147,6 @@ public class UserInfoController extends BaseController<UserInfo, String, UserInf
       return Result.error("查询统计数据失败");
     }
   }
-
 
 
 }

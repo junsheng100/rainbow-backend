@@ -2,6 +2,7 @@ package com.rainbow.user.controller;
 
 import com.rainbow.base.config.JwtConfig;
 import com.rainbow.base.config.RedisTokenStore;
+import com.rainbow.base.constant.DataConstant;
 import com.rainbow.base.exception.NoLoginException;
 import com.rainbow.base.model.base.Result;
 import com.rainbow.base.model.domain.LoginUser;
@@ -67,7 +68,6 @@ public class AuthController {
   private AuthService authService;
 
 
-
   @PostMapping("/login")
   @Operation(summary = "用户登录")
   public Result<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
@@ -103,6 +103,7 @@ public class AuthController {
     response.setAccessToken(accessToken);
     response.setRefreshToken(refreshToken);
     response.setExpiresIn(jwtTokenUtil.getAccessTokenValidityInSeconds());
+    response.setExpiresOut(jwtTokenUtil.getRefreshTokenValidityInSeconds());
 
 
     loginService.saveUserLogin(user.getUserId());
@@ -111,7 +112,7 @@ public class AuthController {
 
   @PostMapping("/refresh")
   @Operation(summary = "刷新令牌")
-  public Result<LoginResponse> refreshToken(@RequestHeader("Authorization") String refreshToken) {
+  public Result<LoginResponse> refreshToken(@RequestHeader(DataConstant.JWT_AUTH) String refreshToken) {
     try {
       // 验证刷新令牌
       if (!jwtTokenUtil.validateToken(refreshToken)) {
@@ -149,7 +150,7 @@ public class AuthController {
 
   @GetMapping("/validate")
   @Operation(summary = "验证令牌")
-  public Result<Boolean> validateToken(@RequestHeader("Authorization") String token) {
+    public Result<Boolean> validateToken(@RequestHeader(DataConstant.JWT_AUTH) String token) {
     return Result.success(jwtTokenUtil.validateToken(token));
   }
 
@@ -173,9 +174,13 @@ public class AuthController {
       String userId = jwtTokenUtil.getUserIdFromToken(token);
       UserInfo user = userInfoService.get(userId);
       user.setPassword("N/A");
+      String avatar = user.getAvatar();
+      if(StringUtils.isNotBlank(avatar)){
+        avatar = avatar+"?timestamp="+System.currentTimeMillis();
+      }
       LoginUser loginUser = new LoginUser();
       BeanUtils.copyProperties(user, loginUser, CommonUtils.getNullPropertyNames(user));
-
+      loginUser.setAvatar(avatar);
       List<String> roles = userInfoService.getUserRoles(userId);
 
       List<String> permissions = userInfoService.getUserPermissions(userId);
@@ -228,5 +233,4 @@ public class AuthController {
   }
 
 
-
-} 
+}

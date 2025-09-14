@@ -10,6 +10,7 @@ import com.rainbow.base.service.impl.BaseServiceImpl;
 import com.rainbow.system.resource.SysConfigDao;
 import com.rainbow.system.resource.SysLoginDao;
 import com.rainbow.user.entity.*;
+import com.rainbow.user.model.UserProfile;
 import com.rainbow.user.model.UserTotal;
 import com.rainbow.user.resource.*;
 import com.rainbow.user.service.UserInfoService;
@@ -193,7 +194,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, String, UserI
     if (CollectionUtils.isNotEmpty(userList)) {
       Collection<String> onLineKeys = redisTemplate.keys(CacheConstants.TOKEN_KEY_PREFIX + "*");
       online = CollectionUtils.isEmpty(onLineKeys) ? 0L : onLineKeys.stream().count();
-      total = userList.stream().count();
+      total = userList.stream().distinct().count();
     }
 
     data.setTotal(total);
@@ -262,6 +263,11 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo, String, UserI
     if (CollectionUtils.isEmpty(list))
       throw new NoLoginException("未授权");
     return list;
+  }
+
+  @Override
+  public void updateProfile(String userId, String avatar) {
+    baseDao.updateProfile(userId, avatar);
   }
 
 

@@ -1,9 +1,9 @@
 package com.rainbow.system.service.impl;
 
-import com.rainbow.base.client.UserClient;
 import com.rainbow.base.exception.BizException;
 import com.rainbow.base.model.domain.LoginUser;
 import com.rainbow.base.service.impl.BaseServiceImpl;
+import com.rainbow.base.utils.JwtTokenUtil;
 import com.rainbow.system.entity.SysFeedback;
 import com.rainbow.system.model.vo.ReplyVo;
 import com.rainbow.system.resource.SysFeedbackDao;
@@ -19,10 +19,8 @@ import java.time.LocalDateTime;
 @Service
 public class SysFeedbackServiceImpl extends BaseServiceImpl<SysFeedback, String, SysFeedbackDao> implements SysFeedbackService {
 
-  @Autowired
-  private UserClient userClient;
-
-
+   @Autowired
+   private JwtTokenUtil tokenUtil;
 
   @Override
   public SysFeedback reply(ReplyVo replyVo)  {
@@ -30,7 +28,7 @@ public class SysFeedbackServiceImpl extends BaseServiceImpl<SysFeedback, String,
     String id = replyVo.getId();
     Integer stage = replyVo.getStage();
 
-    LoginUser loginUser = userClient.getLoginUser();
+    LoginUser loginUser = tokenUtil.getLoginUser();
     String userName = loginUser.getUserName();
     SysFeedback entity = baseDao.get(id);
     if (entity == null) {

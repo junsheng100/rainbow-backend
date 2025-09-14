@@ -42,12 +42,16 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictType,Long, Sy
     if(null != old){
       String dictType = old.getDictType();
       List<SysDictData> dataList = dataDao.findByDictType(dictType);
+
+
       if(CollectionUtils.isNotEmpty(dataList)){
-        dataList.stream().forEach(data->{
-          data.setDictType(entity.getDictType());
-          data.setStatus(entity.getStatus());
-          dataDao.store(data);
-        });
+        dataList = dataList.stream().filter(t-> !t.getStatus().equals(entity.getStatus()) ).collect(Collectors.toList());
+        if(CollectionUtils.isNotEmpty(dataList)){
+          for(SysDictData data:dataList){
+            data.setStatus(entity.getStatus());
+            dataDao.save(data);
+          }
+        }
       }
     }
     baseDao.store(entity);

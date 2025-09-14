@@ -1,11 +1,15 @@
 package com.rainbow.system.resource.impl;
 
+import com.rainbow.base.model.base.PageData;
 import com.rainbow.base.resource.impl.BaseDaoImpl;
 import com.rainbow.base.utils.DateTools;
 import com.rainbow.system.entity.SysOperLog;
+import com.rainbow.system.model.vo.LogParamVo;
 import com.rainbow.system.repository.SysOperLogRepository;
 import com.rainbow.system.resource.SysOperLogDao;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
@@ -47,6 +51,14 @@ public class SysOperLogDaoImpl extends BaseDaoImpl<SysOperLog, Long, SysOperLogR
     String startTime = sdf.format(start);
     String endTime = sdf.format(end);
     return jpaRepository.totalUserList(startTime, endTime);
+  }
+
+  @Override
+  public PageData<SysOperLog> pageList(LogParamVo data, Pageable pageable) {
+    Page<SysOperLog> page = jpaRepository.findPageList(data, pageable);
+
+    PageData<SysOperLog> pageData = new PageData<>(page);
+    return pageData;
   }
 
 

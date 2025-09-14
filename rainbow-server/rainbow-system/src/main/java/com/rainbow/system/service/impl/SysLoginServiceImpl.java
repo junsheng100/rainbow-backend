@@ -4,12 +4,13 @@ import com.alibaba.fastjson2.JSON;
 import com.rainbow.base.model.base.PageData;
 import com.rainbow.base.model.vo.AddressInfo;
 import com.rainbow.base.model.vo.CommonVo;
+import com.rainbow.base.resource.impl.DataManager;
 import com.rainbow.base.service.impl.BaseServiceImpl;
 import com.rainbow.base.utils.AddressUtils;
 import com.rainbow.base.utils.IPUtils;
-import com.rainbow.base.utils.JwtTokenUtil;
 import com.rainbow.system.entity.SysIPData;
 import com.rainbow.system.entity.SysLogin;
+import com.rainbow.system.model.vo.LogParamVo;
 import com.rainbow.system.model.vo.LoginData;
 import com.rainbow.system.resource.SysIPDataDao;
 import com.rainbow.system.resource.SysLoginDao;
@@ -48,8 +49,7 @@ public class SysLoginServiceImpl extends BaseServiceImpl<SysLogin, Long, SysLogi
   @Autowired
   private HttpServletRequest request;
 
-  @Autowired
-  private JwtTokenUtil tokenUtil;
+
   @Autowired
   private UserInfoDao userDao;
 
@@ -60,6 +60,9 @@ public class SysLoginServiceImpl extends BaseServiceImpl<SysLogin, Long, SysLogi
   private SysConfigService configService;
   @Autowired
   private SysIPDataDao ipAddressDao;
+
+  @Autowired
+  protected DataManager<SysLogin> dataManager;
 
   @Override
   public SysLogin saveLogin(UserInfo user) {
@@ -90,7 +93,7 @@ public class SysLoginServiceImpl extends BaseServiceImpl<SysLogin, Long, SysLogi
 
     setLogAddress(login);
 
-    super.baseDao.store(login);
+    super.baseDao.save(login);
     userDao.updateLogin(user.getUserId(), user.getLogin());
     createCacheData(JWT_USERID + userId, login);
 
@@ -132,18 +135,6 @@ public class SysLoginServiceImpl extends BaseServiceImpl<SysLogin, Long, SysLogi
   @Transactional
   @Override
   public Boolean saveUserLogin(String userId) {
-
-//    Runnable runnable = new Runnable() {
-//      @Override
-//      public void run() {
-//        UserInfo userInfo = userDao.get(userId);
-//        saveLogin(userInfo);
-//      }
-//    };
-//
-//    Thread thread = new Thread(runnable);
-//    thread.setPriority(Thread.MIN_PRIORITY);
-//    thread.start();
     UserInfo userInfo = userDao.get(userId);
     saveLogin(userInfo);
 
@@ -153,19 +144,6 @@ public class SysLoginServiceImpl extends BaseServiceImpl<SysLogin, Long, SysLogi
   @Transactional
   @Override
   public Boolean saveUserLogout(String userId) {
-
-//    Runnable runnable = new Runnable() {
-//      @Override
-//      public void run() {
-//        UserInfo userInfo = userDao.get(userId);
-//        saveLogout(userInfo);
-//      }
-//    };
-//
-//    Thread thread = new Thread(runnable);
-//    thread.setPriority(Thread.MIN_PRIORITY);
-//    thread.start();
-
     UserInfo userInfo = userDao.get(userId);
     saveLogout(userInfo);
 
@@ -306,6 +284,14 @@ public class SysLoginServiceImpl extends BaseServiceImpl<SysLogin, Long, SysLogi
   }
 
   @Override
+  public PageData<SysLogin> pageList(CommonVo<LogParamVo> vo) {
+    Pageable pageable = dataManager.getCommonPageable(vo, SysLogin.class);
+    PageData<SysLogin> pageData = baseDao.pageList(vo.getData(), pageable);
+
+    return pageData;
+  }
+
+  @Override
   public Boolean delete(Long id) {
     return baseDao.remove(id);
   }
@@ -342,7 +328,7 @@ public class SysLoginServiceImpl extends BaseServiceImpl<SysLogin, Long, SysLogi
       login.setCity(addressInfo.getCity());
       /// ///////////////////////////
       ipData = new SysIPData(addressInfo);
-      ipAddressDao.store(ipData);
+      ipAddressDao.save(ipData);
     }else{
       login.setIpaddr(ipData.getIpaddr());
       login.setLoginLocation(ipData.getLocation());

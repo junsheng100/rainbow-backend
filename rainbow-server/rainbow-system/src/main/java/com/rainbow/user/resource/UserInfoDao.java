@@ -2,6 +2,7 @@ package com.rainbow.user.resource;
 
 import com.rainbow.base.resource.BaseDao;
 import com.rainbow.user.entity.UserInfo;
+import com.rainbow.user.model.UserProfile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,4 +29,6 @@ public interface UserInfoDao extends BaseDao<UserInfo, String> {
   void updateLogout(String userId, LocalDateTime logout);
 
   List<UserInfo> findInUserId(List<String> list);
+
+  void updateProfile(String userId, String avatar);
 }

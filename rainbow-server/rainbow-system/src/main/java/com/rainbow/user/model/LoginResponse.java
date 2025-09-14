@@ -1,5 +1,6 @@
 package com.rainbow.user.model;
 
+import com.rainbow.base.constant.DataConstant;
 import com.rainbow.base.model.domain.LoginUser;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -15,11 +16,14 @@ public class LoginResponse extends LoginUser {
     private String refreshToken;
     
     @Schema(description = "令牌类型")
-    private String tokenType = "Bearer";
+    private String tokenType = DataConstant.JWT_HEADER.trim();
     
-    @Schema(description = "过期时间（秒）")
+    @Schema(description = "过期续签时间（秒）")
     private Long expiresIn;
     
+    @Schema(description = "过期重新登录时间（秒）")
+    private Long expiresOut;
+
 
 
 } 

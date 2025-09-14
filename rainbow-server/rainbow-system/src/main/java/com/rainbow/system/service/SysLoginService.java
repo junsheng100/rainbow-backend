@@ -4,6 +4,7 @@ import com.rainbow.base.model.base.PageData;
 import com.rainbow.base.model.vo.CommonVo;
 import com.rainbow.base.service.BaseService;
 import com.rainbow.system.entity.SysLogin;
+import com.rainbow.system.model.vo.LogParamVo;
 import com.rainbow.system.model.vo.LoginData;
 import com.rainbow.user.entity.UserInfo;
 
@@ -27,4 +28,7 @@ public interface SysLoginService extends BaseService<SysLogin,Long> {
   Boolean logoutAll();
 
   List<LoginData> totalAreaPro();
+
+  PageData<SysLogin> pageList(CommonVo<LogParamVo> vo);
+
 }

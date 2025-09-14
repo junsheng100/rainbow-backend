@@ -3,14 +3,12 @@ package com.rainbow.aspect;
 
 import com.alibaba.fastjson2.JSON;
 import com.rainbow.base.annotation.OperLog;
-import com.rainbow.base.client.OperLogClient;
-import com.rainbow.base.client.UserClient;
 import com.rainbow.base.constant.DataConstant;
 import com.rainbow.base.exception.BaseException;
 import com.rainbow.base.model.base.Result;
 import com.rainbow.base.model.vo.OperLogVo;
 import com.rainbow.base.utils.IPUtils;
-import com.rainbow.system.entity.SysOperLog;
+import com.rainbow.base.utils.JwtTokenUtil;
 import com.rainbow.system.service.SysOperLogService;
 import eu.bitwalker.useragentutils.UserAgent;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,8 +40,9 @@ public class OperLogAspect {
 
   @Autowired
   private HttpServletRequest request;
-  @Autowired
-  private UserClient userClient;
+
+   @Autowired
+  private JwtTokenUtil tokenUtil;
 
   @Autowired
   private SysOperLogService logService;
@@ -138,7 +137,7 @@ public class OperLogAspect {
       url = url.length() > 255 ? url.substring(0, 255) : url;
 
 
-      String operName = userClient.getUserName();
+      String operName = tokenUtil.getUserName();
       String requestMethod = request.getMethod();
       String operParam = JSON.toJSONString(parameterValues);
 

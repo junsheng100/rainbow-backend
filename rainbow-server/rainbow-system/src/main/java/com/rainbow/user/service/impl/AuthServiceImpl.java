@@ -2,25 +2,19 @@ package com.rainbow.user.service.impl;
 
 import com.rainbow.base.config.JwtConfig;
 import com.rainbow.base.constant.DataConstant;
-import com.rainbow.base.utils.BeanTools;
 import com.rainbow.base.utils.StringUtils;
 import com.rainbow.system.entity.SysDictData;
 import com.rainbow.system.resource.SysDictDataDao;
-import com.rainbow.user.entity.UserInfo;
-import com.rainbow.user.resource.UserInfoDao;
 import com.rainbow.user.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @Author：QQ:304299340

@@ -1,13 +1,13 @@
 package com.rainbow.user.service.impl;
 
-import com.rainbow.base.client.UserClient;
 import com.rainbow.base.constant.DataConstant;
 import com.rainbow.base.enums.UseStatus;
 import com.rainbow.base.enums.UserType;
+import com.rainbow.base.exception.AuthRoleException;
 import com.rainbow.base.exception.BizException;
-import com.rainbow.base.model.domain.LoginUser;
 import com.rainbow.base.model.router.MetaVo;
 import com.rainbow.base.model.router.RouterVo;
+import com.rainbow.base.utils.JwtTokenUtil;
 import com.rainbow.base.utils.StringUtils;
 import com.rainbow.user.entity.SysMenu;
 import com.rainbow.user.entity.SysRoleMenu;
@@ -25,7 +25,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.message.AuthException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,8 +32,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class RouterServiceImpl implements RouterService {
-  @Autowired
-  protected UserClient userClient;
+
   @Autowired
   private SysMenuDao menuDao;
   @Autowired
@@ -43,6 +41,8 @@ public class RouterServiceImpl implements RouterService {
   private UserRoleDao userRoleDao;
   @Autowired
   private SysRoleMenuDao roleMenuDao;
+  @Autowired
+  private JwtTokenUtil jwtTokenUtil;
 
   private final static String NO_FRAME = UseStatus.YES.getCode();
   private final static String TYPE_DIR = MenuTypeEnum.CATALOG.getCode();
@@ -55,10 +55,8 @@ public class RouterServiceImpl implements RouterService {
 
   @Override
   public List<RouterVo> getRouters() {
-    List<RouterVo> list = new ArrayList<>();
 
-    LoginUser user = userClient.getLoginUser();
-    String userId = user.getUserId();
+    String userId = jwtTokenUtil.getUserIdFromToken();
     UserInfo userInfo = userDao.get(userId);
     String userType = userInfo.getUserType();
     boolean isAdmin = UserType.ADMIN.name().equals(userType);
@@ -118,12 +116,12 @@ public class RouterServiceImpl implements RouterService {
     List<SysMenu> list = new ArrayList<>();
     List<UserRole> userRoleList = userRoleDao.findByUserId(userId);
     if (CollectionUtils.isEmpty(userRoleList))
-      throw new AuthException("未授权");
+      throw new AuthRoleException("未授权");
     List<Long> roleIdList = userRoleList.stream().map(UserRole::getRoleId).distinct().collect(Collectors.toList());
 
     List<SysRoleMenu> roleMenuList = roleMenuDao.findInRoleIdList(roleIdList);
     if (CollectionUtils.isEmpty(roleMenuList))
-      throw new AuthException("无可用权限");
+      throw new AuthRoleException("无可用权限");
 
     List<Long> menuIdList = roleMenuList.stream().map(SysRoleMenu::getMenuId).distinct().collect(Collectors.toList());
     list = menuDao.findMenuInMenuId(menuIdList);

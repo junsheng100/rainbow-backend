@@ -43,4 +43,7 @@ public interface UserInfoRepository extends BaseRepository<UserInfo, String> {
   @Query("select count(t) from UserInfo  t where t.userType = ?1 and t.userId = ?2 ")
   int isUserType(String name, String userId);
 
+  @Query("update UserInfo set avatar = ?2 where userId = ?1 ")
+  void updateProfile(String userId, String avatar);
+
 }

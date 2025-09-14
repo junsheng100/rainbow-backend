@@ -1,5 +1,6 @@
 package com.rainbow.user.service;
 
+import com.rainbow.base.config.JwtConfig;
 import com.rainbow.base.model.router.RouterVo;
 import com.rainbow.user.entity.SysMenu;
 

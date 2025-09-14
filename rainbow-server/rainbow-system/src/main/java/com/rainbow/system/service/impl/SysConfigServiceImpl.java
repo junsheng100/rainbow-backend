@@ -57,4 +57,9 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfig, Long, SysCo
   public SysConfig getConfigValue(String configKey) {
     return baseDao.findByKey(configKey);
   }
+
+  @Override
+  public List<SysConfig> findConfigValue(String key) {
+    return  baseDao.findConfigValue(key);
+  }
 }
