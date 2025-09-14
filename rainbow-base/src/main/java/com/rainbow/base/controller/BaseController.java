@@ -4,7 +4,6 @@ import com.rainbow.base.annotation.NoRepeatSubmit;
 import com.rainbow.base.annotation.OperLog;
 import com.rainbow.base.annotation.RestResponse;
 import com.rainbow.base.api.ApiResult;
-import com.rainbow.base.client.UserClient;
 import com.rainbow.base.config.JwtConfig;
 import com.rainbow.base.entity.BaseEntity;
 import com.rainbow.base.exception.NoLoginException;
@@ -44,8 +43,7 @@ public class BaseController<Entity extends BaseEntity, ID extends Serializable, 
   @Autowired
   protected JwtTokenUtil jwtTokenUtil;
 
-  @Autowired
-  protected UserClient userClient;
+
 
 
   @OperLog("详情")
@@ -127,13 +125,13 @@ public class BaseController<Entity extends BaseEntity, ID extends Serializable, 
   }
 
   protected LoginUser getLoginUser() {
-    LoginUser user = userClient.getLoginUser();
+    LoginUser user = jwtTokenUtil.getLoginUser();
     return user;
   }
 
 
   protected String getUserId() {
-    LoginUser user = userClient.getLoginUser();
+    LoginUser user =  getLoginUser();
     return user.getUserId();
   }
 }

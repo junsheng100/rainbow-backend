@@ -1,6 +1,7 @@
 package com.rainbow.base.interceptor;
 
 import com.rainbow.base.annotation.NoRepeatSubmit;
+import com.rainbow.base.constant.DataConstant;
 import com.rainbow.base.exception.RepeatException;
 import com.rainbow.base.service.RedisService;
 import com.rainbow.base.utils.Md5Utils;
@@ -40,7 +41,7 @@ public class NoRepeatSubmitInterceptor implements HandlerInterceptor {
         }
 
         // 获取用户标识（可以是token、session等）
-        String token = request.getHeader("Authorization");
+        String token = request.getHeader(DataConstant.JWT_AUTH);
         if (StringUtils.isBlank(token)) {
             token = request.getSession().getId();
         }

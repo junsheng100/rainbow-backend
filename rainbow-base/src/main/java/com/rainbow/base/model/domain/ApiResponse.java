@@ -1,5 +1,6 @@
 package com.rainbow.base.model.domain;
 
+import com.rainbow.base.constant.DataConstant;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -14,7 +15,7 @@ public class ApiResponse extends Account {
     private String refreshToken;
     
     @Schema(description = "令牌类型")
-    private String tokenType = "Bearer";
+    private String tokenType = DataConstant.JWT_HEADER.trim();
     
     @Schema(description = "过期时间（秒）")
     private Long expiresIn;

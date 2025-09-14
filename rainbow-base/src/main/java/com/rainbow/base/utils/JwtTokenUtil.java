@@ -1,15 +1,19 @@
 package com.rainbow.base.utils;
 
+import com.alibaba.fastjson2.JSON;
 import com.rainbow.base.config.JwtConfig;
 import com.rainbow.base.config.RedisTokenStore;
 import com.rainbow.base.constant.DataConstant;
+import com.rainbow.base.exception.NoLoginException;
 import com.rainbow.base.model.domain.Account;
 import com.rainbow.base.model.domain.LoginUser;
+import com.sun.org.apache.regexp.internal.RE;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,8 +37,19 @@ public class JwtTokenUtil {
 
   @Autowired
   protected HttpServletRequest request;
+
+
+  private final static String USER_ID = "userId";
+  private final static String USER_NAME = "userName";
+  private final static String USER_TYPE = "userType";
+  private final static String ACCOUNT_ID = "id";
+  private final static String ACCOUNT_NAME = "name";
+  private final static String ACCOUNT_LOGIN_TIME = "loginTime";
+
+
   /**
    * 统一处理 token，移除 Bearer 前缀
+   *
    * @param token 原始 token
    * @return 处理后的 token
    */
@@ -42,10 +57,19 @@ public class JwtTokenUtil {
     if (StringUtils.isBlank(token)) {
       return null;
     }
-    return token.startsWith(DataConstant.JWT_HEADER) ? token.substring(DataConstant.JWT_HEADER.length()) : token;
+    if (token.startsWith(DataConstant.JWT_HEADER)) {
+      token = token.substring(DataConstant.JWT_HEADER.length());
+    }
+    token = token.trim();
+    return token;
   }
 
   public String getUserIdFromToken(String token) {
+    return getClaimFromToken(token, Claims::getSubject);
+  }
+
+  public String getUserIdFromToken() {
+    String token = getToken();
     return getClaimFromToken(token, Claims::getSubject);
   }
 
@@ -59,10 +83,36 @@ public class JwtTokenUtil {
   }
 
   public Claims getAllClaimsFromToken(String token) {
+    token = StringUtils.isBlank(token) ? getToken() : cleanToken(token);
     return Jwts.parser()
             .setSigningKey(config.getSecret())
             .parseClaimsJws(token)
             .getBody();
+  }
+
+  public Claims getAllClaimsFromToken() {
+    String token = request.getHeader(config.getHeader());
+    return getAllClaimsFromToken(token);
+  }
+
+  public String getUserId() {
+    LoginUser user = getLoginUser();
+    String userId = user.getUserId();
+    return userId;
+  }
+
+  public String getUserName() {
+    LoginUser user = getLoginUser();
+    String userName = user.getUserName();
+    return userName;
+  }
+
+
+  public LoginUser getLoginUser() {
+    String token = getToken();
+    Claims claims = getAllClaimsFromToken(token);
+    LoginUser user = JSON.parseObject(JSON.toJSONString(claims), LoginUser.class);
+    return user;
   }
 
   private Boolean isTokenExpired(String token) {
@@ -72,20 +122,22 @@ public class JwtTokenUtil {
 
   public String generateAccessToken(LoginUser user) {
     Map<String, Object> claims = new HashMap<>();
-    claims.put("userType", user.getUserType());
+    claims.put(USER_TYPE, user.getUserType());
+    claims.put(USER_NAME, user.getUserName());
+    claims.put(USER_ID, user.getUserId());
     String token = doGenerateToken(claims, user.getUserId(), config.getAccessTokenValidityInSeconds());
-    
+
     // 存储到 Redis
     redisTokenStore.storeToken(user.getUserId(), token, config.getAccessTokenValidityInSeconds());
-    
+
     return token;
   }
 
   public String generateApiToken(Account account) {
     Map<String, Object> claims = new HashMap<>();
-    claims.put("id", account.getId());
-    claims.put("name", account.getName());
-    claims.put("loginTime", account.getLoginTime());
+    claims.put(ACCOUNT_ID, account.getId());
+    claims.put(ACCOUNT_NAME, account.getName());
+    claims.put(ACCOUNT_LOGIN_TIME, account.getLoginTime());
     String token = doGenerateToken(claims, account.getId(), config.getAccessTokenValidityInSeconds());
 
     // 存储到 Redis
@@ -95,24 +147,25 @@ public class JwtTokenUtil {
   }
 
 
-
   public String generateRefreshToken(LoginUser user) {
     Map<String, Object> claims = new HashMap<>();
-    claims.put("userType", user.getUserType());
+    claims.put(USER_TYPE, user.getUserType());
+    claims.put(USER_NAME, user.getUserName());
+    claims.put(USER_ID, user.getUserId());
     String refreshToken = doGenerateToken(claims, user.getUserId(), config.getRefreshTokenValidityInSeconds());
-    
+
     // 存储到 Redis
     redisTokenStore.storeRefreshToken(user.getUserId(), refreshToken, config.getRefreshTokenValidityInSeconds());
-    
+
     return refreshToken;
   }
 
 
   public String generateRefreshApiToken(Account account) {
     Map<String, Object> claims = new HashMap<>();
-    claims.put("id", account.getId());
-    claims.put("name", account.getName());
-    claims.put("loginTime", account.getLoginTime());
+    claims.put(ACCOUNT_ID, account.getId());
+    claims.put(ACCOUNT_NAME, account.getName());
+    claims.put(ACCOUNT_LOGIN_TIME, account.getLoginTime());
     String refreshToken = doGenerateToken(claims, account.getId(), config.getRefreshTokenValidityInSeconds());
 
     // 存储到 Redis
@@ -155,9 +208,8 @@ public class JwtTokenUtil {
   }
 
   public boolean isToken() {
-    String token = request.getHeader(config.getHeader());
-
-    log.info("###### profile:", token);
+//    String token = request.getHeader(config.getHeader());
+    String token = getToken();
     // 使用统一的方法处理 token
     token = cleanToken(token);
     // 验证令牌
@@ -171,11 +223,24 @@ public class JwtTokenUtil {
     return config.getAccessTokenValidityInSeconds();
   }
 
+  public Long getRefreshTokenValidityInSeconds() {
+    return config.getRefreshTokenValidityInSeconds();
+  }
+
   public JwtConfig getConfig() {
     return config;
   }
 
   public void setConfig(JwtConfig config) {
     this.config = config;
+  }
+
+  private String getToken() {
+    String token = request.getHeader(config.getHeader());
+    if (StringUtils.isNotBlank(token)) {
+      token = cleanToken(token);
+      return token;
+    }
+    throw new NoLoginException("NOT LOGIN");
   }
 }

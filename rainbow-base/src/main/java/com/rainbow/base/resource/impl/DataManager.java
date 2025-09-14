@@ -1,23 +1,19 @@
 package com.rainbow.base.resource.impl;
 
-import com.rainbow.base.annotation.Keyword;
-import com.rainbow.base.annotation.OrderBy;
-import com.rainbow.base.annotation.Origin;
-import com.rainbow.base.annotation.Search;
-import com.rainbow.base.annotation.SearchFilter;
-import com.rainbow.base.client.UserClient;
-import com.rainbow.base.enums.ChartEnum;
+import com.rainbow.base.annotation.*;
 import com.rainbow.base.entity.BaseEntity;
+import com.rainbow.base.enums.ChartEnum;
 import com.rainbow.base.enums.SearchEnum;
 import com.rainbow.base.enums.UseStatus;
 import com.rainbow.base.exception.DataException;
-import com.rainbow.base.model.domain.LoginUser;
 import com.rainbow.base.model.base.OrderModel;
+import com.rainbow.base.model.domain.LoginUser;
 import com.rainbow.base.model.vo.BaseVo;
 import com.rainbow.base.model.vo.CommonVo;
 import com.rainbow.base.utils.AnnotationProxyInjector;
 import com.rainbow.base.utils.BeanTools;
 import com.rainbow.base.utils.CommonUtils;
+import com.rainbow.base.utils.JwtTokenUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -45,8 +41,10 @@ public class DataManager<Entity extends BaseEntity> {
 
   private static final Logger log = LoggerFactory.getLogger(DataManager.class);
 
+
   @Autowired
-  private UserClient userClient;
+  private JwtTokenUtil jwtTokenUtil;
+
 
   public Map<String, Predicate> commonParams(Root<Entity> root, CriteriaBuilder cb, BaseVo<Entity> vo) {
     Map<String, Predicate> params = getPredicates(root, cb, vo);
@@ -374,7 +372,7 @@ public class DataManager<Entity extends BaseEntity> {
 
     addNormal(entity);
 
-    String userName = userClient.getUserName();
+    String userName = getUserName();
     entity.setFcu(userName);
     entity.setLcu(userName);
 
@@ -387,8 +385,7 @@ public class DataManager<Entity extends BaseEntity> {
     try {
       modNormal(entity, old);
 
-      LoginUser user = userClient.getLoginUser();
-      String userName = user.getUserName();
+      String userName = getUserName();
       entity.setLcu(userName);
       if (StringUtils.isBlank(entity.getFcu())) {
         entity.setFcu(userName);
@@ -527,7 +524,7 @@ public class DataManager<Entity extends BaseEntity> {
   }
 
 
-  public Sort getCommonSort(CommonVo<?> vo,Class clss) {
+  public Sort getCommonSort(CommonVo<?> vo, Class clss) {
 
     String sortStr = vo.getSort();
 
@@ -650,12 +647,12 @@ public class DataManager<Entity extends BaseEntity> {
 
 
   public String getUserName() {
-    String userName = userClient.getUserName();
+    String userName = jwtTokenUtil.getUserName();
     return userName;
   }
 
   public LoginUser getLoginUser() {
-    LoginUser user = userClient.getLoginUser();
+    LoginUser user = jwtTokenUtil.getLoginUser();
     return user;
   }
 
@@ -702,7 +699,7 @@ public class DataManager<Entity extends BaseEntity> {
 
   public Pageable getCommonPageable(CommonVo<?> vo, Class<Entity> clzz) {
 
-    Sort sort = getCommonSort(vo,clzz);
+    Sort sort = getCommonSort(vo, clzz);
     Integer pageNo = vo.getPageNo();
     pageNo = pageNo <= 0 ? 0 : pageNo - 1;
     Integer pageSize = vo.getPageSize();

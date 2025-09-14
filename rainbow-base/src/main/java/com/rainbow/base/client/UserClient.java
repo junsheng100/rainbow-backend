@@ -68,4 +68,11 @@ public class UserClient extends BaseClient{
     return userUrl;
   }
 
+  public JwtConfig getConfig() {
+    return config;
+  }
+
+  public void setConfig(JwtConfig config) {
+    this.config = config;
+  }
 }

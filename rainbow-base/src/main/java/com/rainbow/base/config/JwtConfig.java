@@ -1,5 +1,6 @@
 package com.rainbow.base.config;
 
+import com.rainbow.base.constant.DataConstant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,7 @@ public class JwtConfig implements Serializable {
   @Value("${jwt.url:}")
   private String url;
 
-  @Value("${jwt.header:Authorization}")
+  @Value("${jwt.header:"+ DataConstant.JWT_AUTH+"}")
   private String header;
 
   @Value("${jwt.secret:ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGH}")

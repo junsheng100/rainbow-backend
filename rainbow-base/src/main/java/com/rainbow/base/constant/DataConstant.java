@@ -5,7 +5,7 @@ import java.util.List;
 
 public class DataConstant {
 
-  public final static String JWT_HEADER = "Bearer ";
+  public final static String JWT_HEADER = "Bearer_";
   public final static String JWT_AUTH = "Authorization";
   public final static String JWT_TITLE = "JWT";
 

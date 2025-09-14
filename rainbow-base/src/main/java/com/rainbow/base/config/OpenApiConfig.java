@@ -1,5 +1,6 @@
 package com.rainbow.base.config;
 
+import com.rainbow.base.constant.DataConstant;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -101,9 +102,10 @@ public class OpenApiConfig {
     return new SecurityScheme()
             .type(SecurityScheme.Type.HTTP)
             .scheme("bearer")
+//            .scheme(DataConstant.JWT_HEADER)
             .bearerFormat("JWT")
             .in(SecurityScheme.In.HEADER)
-            .name("Authorization")
+            .name(DataConstant.JWT_AUTH)
             .description(JWT_DESCRIPTION);
   }
 }

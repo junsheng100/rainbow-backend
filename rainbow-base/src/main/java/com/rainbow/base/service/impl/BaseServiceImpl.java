@@ -1,6 +1,5 @@
 package com.rainbow.base.service.impl;
 
-import com.rainbow.base.client.UserClient;
 import com.rainbow.base.entity.BaseEntity;
 import com.rainbow.base.enums.UserType;
 import com.rainbow.base.exception.BizException;
@@ -10,6 +9,7 @@ import com.rainbow.base.model.domain.LoginUser;
 import com.rainbow.base.model.vo.BaseVo;
 import com.rainbow.base.resource.BaseDao;
 import com.rainbow.base.service.BaseService;
+import com.rainbow.base.utils.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class BaseServiceImpl<Entity extends BaseEntity, ID extends Serializable,
   protected DAO baseDao;
 
   @Autowired
-  protected UserClient userClient;
+  protected JwtTokenUtil jwtTokenUtil;
 
   @Override
   public Entity get(ID id) {
@@ -98,7 +98,7 @@ public class BaseServiceImpl<Entity extends BaseEntity, ID extends Serializable,
   }
 
   public LoginUser getLoginUser() {
-    return userClient.getLoginUser();
+    return jwtTokenUtil.getLoginUser();
   }
 
   public boolean isAdmin()  {
