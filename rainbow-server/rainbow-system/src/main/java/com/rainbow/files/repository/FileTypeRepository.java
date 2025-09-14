@@ -7,13 +7,16 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 
-public interface FileTypeRepository extends BaseRepository<FileType,String> {
+public interface FileTypeRepository extends BaseRepository<FileType, String> {
 
   @Query("select t from FileType t where t.mimeType = ?1 and t.extension = ?2 ")
   FileType findMimeTypeAndExtension(String mimiType, String extension);
 
   @Query("select t.extension from FileType t where t.approve = 1 and t.refuse = 0  ")
   List<String> findAllow();
+
+  @Query("select t from FileType t where t.approve = 1 and t.refuse = 0  ")
+  List<FileType> findAllowType();
 
   @Query("select t from FileType t where t.mimeType = ?1 ")
   List<FileType> findByMimeType(String mimeType);
@@ -30,5 +33,6 @@ public interface FileTypeRepository extends BaseRepository<FileType,String> {
 
   @Query("select t from FileType t where t.extension= ?1 ")
   FileType findByExtension(String fileExt);
+
 
 }

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -93,5 +94,10 @@ public class FileTypeServiceImpl extends BaseServiceImpl<FileType,String, FileTy
       }
 
     }
+
+  @Override
+  public List<FileType> findAllowType() {
+    return baseDao.findAllowType();
+  }
 
 }

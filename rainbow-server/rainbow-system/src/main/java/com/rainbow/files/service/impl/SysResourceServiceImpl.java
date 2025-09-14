@@ -1,14 +1,17 @@
 package com.rainbow.files.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.rainbow.base.enums.ChartEnum;
 import com.rainbow.base.enums.UseStatus;
 import com.rainbow.base.exception.BizException;
 import com.rainbow.base.service.impl.BaseServiceImpl;
 import com.rainbow.base.utils.Md5Utils;
 import com.rainbow.base.utils.RandomId;
+import com.rainbow.files.config.ResourceConfig;
 import com.rainbow.files.entity.FileType;
 import com.rainbow.files.entity.SysResource;
 import com.rainbow.files.resource.FileTypeDao;
+import com.rainbow.system.entity.SysConfig;
 import com.rainbow.system.resource.SysConfigDao;
 import com.rainbow.files.resource.SysResourceDao;
 import com.rainbow.files.service.SysResourceService;
@@ -22,9 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -36,6 +37,8 @@ public class SysResourceServiceImpl extends BaseServiceImpl<SysResource, String,
 
   @Autowired
   private SysConfigDao configDao;
+
+  public static final String FILE_CONFIG = "file_config";
 
 
   @SneakyThrows
@@ -93,6 +96,63 @@ public class SysResourceServiceImpl extends BaseServiceImpl<SysResource, String,
     }
 
     return data;
+  }
+
+  @Override
+  public ResourceConfig getResourceConfig() {
+    SysConfig sysConfig = configDao.findByKey(FILE_CONFIG);
+    if (null != sysConfig) {
+      String value = sysConfig.getConfigValue();
+      if (com.rainbow.base.utils.StringUtils.isNotBlank(value)) {
+        ResourceConfig config = JSON.parseObject(value, ResourceConfig.class);
+        return config;
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public ResourceConfig setUploadConfig(ResourceConfig config) {
+
+    SysConfig sysConfig = new SysConfig();
+
+    sysConfig.setConfigName("系统资源管理");
+    sysConfig.setConfigKey(FILE_CONFIG);
+    String value = JSON.toJSONString(config);
+    sysConfig.setConfigValue(value);
+    sysConfig.setStatus("0");
+
+    configDao.store(sysConfig);
+
+    return config;
+  }
+
+  @Override
+  public boolean validate(MultipartFile multipartFile) {
+    if (null == multipartFile)
+      throw new BizException("file is null");
+    ResourceConfig config = getResourceConfig();
+    if (null == config)
+      return true;
+
+    Long size = multipartFile.getSize();
+    String fileExt = multipartFile.getOriginalFilename();
+    fileExt = fileExt.substring(fileExt.lastIndexOf(ChartEnum.POINT.getCode()) + 1);
+
+    Long maxSize = config.getMaxSize() * 1024L * 1024L;
+    String[] allowExtensions = config.getAllowExtensions();
+    List<String> allowList = null == allowExtensions || allowExtensions.length == 0 ? null : Arrays.asList(allowExtensions);
+
+    if (maxSize < size)
+      throw new BizException("文件大小超出限制");
+
+    if (CollectionUtils.isEmpty(allowList))
+      return true;
+
+    if (allowList.contains(fileExt))
+      return true;
+
+    throw new BizException("文件格式不支持");
   }
 
   private boolean isAllowFile(MultipartFile multipartFile) {

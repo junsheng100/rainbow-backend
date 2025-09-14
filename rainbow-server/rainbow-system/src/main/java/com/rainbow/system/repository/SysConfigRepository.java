@@ -17,4 +17,8 @@ public interface SysConfigRepository extends BaseRepository<SysConfig, Long> {
   @Query("select t.configValue from SysConfig t where trim(t.configKey)  like concat('%', ?1,'%') ")
   List<SysConfig> likeConfigKey(String key);
 
+  @Query("select max( t.orderNum ) from SysConfig t  ")
+  Integer getMaxOrderNum();
+
+
 }

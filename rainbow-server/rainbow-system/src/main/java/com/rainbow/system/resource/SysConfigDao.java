@@ -12,4 +12,6 @@ public interface SysConfigDao extends BaseDao<SysConfig,Long> {
   String getFileBasePath();
 
   List<SysConfig> findConfigValue(String key);
+
+
 }

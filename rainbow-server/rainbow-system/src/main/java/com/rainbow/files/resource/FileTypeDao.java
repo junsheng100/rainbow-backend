@@ -21,4 +21,6 @@ public interface FileTypeDao extends BaseDao<FileType,String> {
   List<FileType> findByTyExtensionIn(List<String> fileExtList);
 
   FileType findByExtension(String fileExt);
+
+  List<FileType> findAllowType();
 }

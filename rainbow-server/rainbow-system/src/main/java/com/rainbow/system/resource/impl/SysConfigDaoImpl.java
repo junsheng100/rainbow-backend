@@ -18,6 +18,29 @@ public class SysConfigDaoImpl extends BaseDaoImpl<SysConfig, Long, SysConfigRepo
 
 
   @Override
+  public SysConfig check(SysConfig entity){
+
+    SysConfig old = getOne(entity);
+
+    Integer orderNum = entity.getOrderNum();
+    if(null != old){
+      orderNum = old.getOrderNum();
+    }
+    if(null == orderNum){
+      orderNum = getMaxOrderNum() + 1;
+    }
+
+    entity.setOrderNum(orderNum);
+
+    return old;
+  }
+
+  private Integer getMaxOrderNum() {
+    Integer maxOrderNum = jpaRepository.getMaxOrderNum();
+    return null == maxOrderNum?1:maxOrderNum;
+  }
+
+  @Override
   public SysConfig findByKey(String key) {
     Assert.notNull(key, "参数KEY不能为空");
     SysConfig data = jpaRepository.findByConfigKey(key);

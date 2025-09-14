@@ -12,12 +12,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.io.File;
 import java.math.BigInteger;
 
+@Slf4j
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
@@ -81,7 +83,11 @@ public class SysResource extends BaseEntity {
     this.originalFilename = multipartFile.getOriginalFilename();
     this.size = BigInteger.valueOf(multipartFile.getSize());
     this.contentType = multipartFile.getContentType();
-    this.md5Code = Md5Utils.getMultipartFileMd5(multipartFile);
+    try {
+      this.md5Code = Md5Utils.getMultipartFileMd5(multipartFile);
+    } catch (Exception e) {
+      log.error("计算上传文件的MD5失败", e);
+    }
     this.fileGroup = multipartFile.getContentType().split(ChartEnum.SLASH.getCode())[0];
     this.fileExt = originalFilename.substring(originalFilename.lastIndexOf(ChartEnum.COMMA.getCode())+1);
   }

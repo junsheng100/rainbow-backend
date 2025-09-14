@@ -59,5 +59,10 @@ public class FileTypeDaoImpl extends BaseDaoImpl<FileType, String,FileTypeReposi
     return StringUtils.isBlank(fileExt)?null:jpaRepository.findByExtension(fileExt);
   }
 
+  @Override
+  public List<FileType> findAllowType() {
+    return super.jpaRepository.findAllowType();
+  }
+
 
 }

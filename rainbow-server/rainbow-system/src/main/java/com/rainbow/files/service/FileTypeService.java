@@ -14,4 +14,6 @@ public interface FileTypeService extends BaseService<FileType,String> {
   List<String> findAllow();
 
   String uploadFile(MultipartFile multipartFile, String localPath);
+
+  List<FileType> findAllowType();
 }
