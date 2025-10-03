@@ -49,7 +49,6 @@ public class WallpaperSyncTask {
         
         try {
             wallpaperSyncService.retryFailedDownloads();
-            log.info("失败下载重试任务执行完成");
         } catch (Exception e) {
             log.error("失败下载重试任务执行失败", e);
         }

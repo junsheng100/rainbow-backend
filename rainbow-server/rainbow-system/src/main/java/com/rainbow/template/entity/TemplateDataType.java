@@ -3,9 +3,7 @@ package com.rainbow.template.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.rainbow.base.annotation.ExcelCell;
-import com.rainbow.base.annotation.OrderBy;
-import com.rainbow.base.annotation.UnionKey;
+import com.rainbow.base.annotation.*;
 import com.rainbow.base.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -22,6 +20,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "template_data_type")
 @org.hibernate.annotations.Table(appliesTo = "template_data_type", comment = "数据类型")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"fcu","lcd","lcu"})
 public class TemplateDataType extends BaseEntity {

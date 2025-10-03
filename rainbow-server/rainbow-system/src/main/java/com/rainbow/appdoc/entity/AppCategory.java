@@ -1,7 +1,9 @@
 package com.rainbow.appdoc.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.rainbow.base.annotation.Keyword;
 import com.rainbow.base.annotation.OrderBy;
+import com.rainbow.base.annotation.SearchFilter;
 import com.rainbow.base.annotation.UnionKey;
 import com.rainbow.base.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "app_category")
 @org.hibernate.annotations.Table(appliesTo = "app_category", comment = "接口类")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonIgnoreProperties({"fcu","lcd","lcu"})
 public class AppCategory extends BaseEntity {
 

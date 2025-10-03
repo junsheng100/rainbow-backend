@@ -2,6 +2,8 @@ package com.rainbow.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rainbow.base.annotation.Keyword;
+import com.rainbow.base.annotation.SearchFilter;
 import com.rainbow.base.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "user_role")
 @org.hibernate.annotations.Table(appliesTo = "user_role", comment = "用户-角色")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"fcd","fcu","lcd","lcu"})
 public class UserRole extends BaseEntity {

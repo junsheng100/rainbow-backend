@@ -3,8 +3,10 @@ package com.rainbow.template.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rainbow.base.annotation.Keyword;
 import com.rainbow.base.annotation.OrderBy;
 import com.rainbow.base.annotation.Search;
+import com.rainbow.base.annotation.SearchFilter;
 import com.rainbow.base.entity.BaseEntity;
 import com.rainbow.base.enums.SearchEnum;
 import com.rainbow.base.utils.StringUtils;
@@ -23,6 +25,7 @@ import javax.validation.constraints.Size;
 @Table(name = "template_field")
 @EqualsAndHashCode(callSuper = true)
 @org.hibernate.annotations.Table(appliesTo = "template_field", comment = "模板-属性信息")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"fcu","lcd","lcu"})
 public class TemplateField extends BaseEntity {

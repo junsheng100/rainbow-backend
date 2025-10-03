@@ -2,9 +2,8 @@ package com.rainbow.template.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rainbow.base.annotation.*;
 import com.rainbow.base.annotation.OrderBy;
-import com.rainbow.base.annotation.Search;
-import com.rainbow.base.annotation.UnionKey;
 import com.rainbow.base.entity.BaseEntity;
 import com.rainbow.base.enums.SearchEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,6 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "template_entity")
 @org.hibernate.annotations.Table(appliesTo = "template_entity", comment = "模板-实体类")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"fcu","lcd","lcu"})
 public class TemplateEntity extends BaseEntity {

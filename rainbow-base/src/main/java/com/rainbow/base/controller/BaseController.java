@@ -29,7 +29,7 @@ import java.util.List;
 
 @Data
 @Slf4j
-public class BaseController<Entity extends BaseEntity, ID extends Serializable, Service extends BaseService<Entity, ID>> implements ApiResult<Entity, ID> {
+public abstract class BaseController<Entity extends BaseEntity, ID extends Serializable, Service extends BaseService<Entity, ID>> implements ApiResult<Entity, ID> {
 
   @Autowired
   protected Service service;

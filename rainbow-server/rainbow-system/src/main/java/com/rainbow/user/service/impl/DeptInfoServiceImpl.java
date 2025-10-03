@@ -2,25 +2,26 @@ package com.rainbow.user.service.impl;
 
 import com.rainbow.base.constant.DataConstant;
 import com.rainbow.base.enums.ChartEnum;
+import com.rainbow.base.model.domain.LoginUser;
 import com.rainbow.base.model.vo.BaseVo;
 import com.rainbow.base.service.impl.BaseServiceImpl;
 import com.rainbow.base.utils.StringUtils;
 import com.rainbow.system.enums.PushTypeEnums;
 import com.rainbow.user.entity.DeptInfo;
 import com.rainbow.user.entity.UserInfo;
+import com.rainbow.user.model.DeptUserTree;
 import com.rainbow.user.model.UserDeptInfo;
+import com.rainbow.user.model.UserProfile;
 import com.rainbow.user.resource.DeptInfoDao;
 import com.rainbow.user.resource.UserInfoDao;
 import com.rainbow.user.service.DeptInfoService;
+import com.rainbow.user.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -68,11 +69,11 @@ public class DeptInfoServiceImpl extends BaseServiceImpl<DeptInfo, Long, DeptInf
     List<UserInfo> userList = null;
 
 
-    if(PushTypeEnums.ALL.getCode().equals(type.getCode())) {
+    if (PushTypeEnums.ALL.getCode().equals(type.getCode())) {
       userList = userInfoDao.findUserAll();
     }
 
-    if(PushTypeEnums.INCLUDE.getCode().equals(type.getCode())) {
+    if (PushTypeEnums.INCLUDE.getCode().equals(type.getCode())) {
       convertCollection(all);
       all.forEach(d -> {
         List<DeptInfo> children = all.stream().filter(a -> a.getParentId().equals(d.getDeptId())).collect(Collectors.toList());
@@ -91,7 +92,7 @@ public class DeptInfoServiceImpl extends BaseServiceImpl<DeptInfo, Long, DeptInf
 
     }
 
-    if(PushTypeEnums.SELF.getCode().equals(type.getCode())) {
+    if (PushTypeEnums.SELF.getCode().equals(type.getCode())) {
       userList = userInfoDao.findInDeptId(idList);
     }
 
@@ -111,6 +112,54 @@ public class DeptInfoServiceImpl extends BaseServiceImpl<DeptInfo, Long, DeptInf
     }
 
     return Collections.emptyList();
+  }
+
+  @Override
+  public List<DeptUserTree> findDeptUserTree(Long parentId) {
+    parentId = getParentId(parentId);
+
+    List<DeptInfo> all = baseDao.findAll();
+    List<UserInfo> userInfoList = userInfoDao.findUserAll();
+
+    LoginUser user = jwtTokenUtil.getLoginUser();
+
+    Long finalParentId = parentId;
+
+    List<DeptUserTree> treeList = all.stream().map(t -> {
+
+
+      List<UserProfile> userList = userInfoList.stream()
+              .filter(a -> t.getDeptId().equals(a.getDeptId()))
+              .filter(u -> !UserUtils.isAdmin(u)).map(u -> {
+        UserProfile userProfile = new UserProfile();
+        userProfile.setUserId(u.getUserId());
+        userProfile.setNickname(u.getNickname());
+        userProfile.setUsername(u.getUserName());
+        userProfile.setAvatar(u.getAvatar());
+        userProfile.setDeptId(u.getDeptId());
+        userProfile.setDeptName(t.getDeptName());
+        return userProfile;
+      }).collect(Collectors.toList());
+
+      DeptUserTree tree = new DeptUserTree(t.getDeptId(), t.getParentId(), t.getDeptName(), userList);
+
+      return tree;
+    }).collect(Collectors.toList());
+
+    treeList.stream().forEach(t -> {
+      List<DeptUserTree> children = treeList.stream().filter(a -> t.getDeptId().equals(a.getParentId())).collect(Collectors.toList());
+      t.setChildren(children);
+    });
+
+    List<DeptUserTree> list = treeList.stream().filter(t -> finalParentId.equals(t.getParentId())).collect(Collectors.toList());
+
+    return list;
+  }
+
+
+  private Long getParentId(Long parentId) {
+    parentId = null == parentId ? DataConstant.MENU_ROOT : parentId;
+    return parentId;
   }
 
   private void getDeptIdList(List<DeptInfo> deptInfoList, List<Long> idList) {

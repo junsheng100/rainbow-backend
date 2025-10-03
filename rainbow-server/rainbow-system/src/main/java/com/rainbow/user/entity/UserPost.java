@@ -2,6 +2,8 @@ package com.rainbow.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rainbow.base.annotation.Keyword;
+import com.rainbow.base.annotation.SearchFilter;
 import com.rainbow.base.annotation.UnionKey;
 import com.rainbow.base.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "user_post")
 @org.hibernate.annotations.Table(appliesTo = "user_post", comment = "用户-岗位")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"fcd","fcu","lcd","lcu"})
 public class UserPost extends BaseEntity {

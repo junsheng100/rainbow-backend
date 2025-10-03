@@ -1,9 +1,15 @@
-
+server:
+  port: 8080
 
 spring:
   web:
     resources:
-      static-locations: file:${user.home}/upload/
+      static-locations:
+        - "file:${user.home}/upload/"
+        - "classpath:/static/"
+        - "classpath:/public/"
+        - "classpath:/resources/"
+        - "classpath:/META-INF/resources/"
   mvc:
     static-path-pattern: /**
     cors:
@@ -19,17 +25,17 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
   redis:
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
     password: ${REDIS_PASSWORD:your_redis_password}
-    database: 0
+    database: 10
     timeout: 10000
     lettuce:
       pool:
@@ -45,6 +51,28 @@ spring:
   freemarker:
     settings:
       recognize_standard_file_extensions: true
+
+jwt:
+  url: http://127.0.0.1:8080/api/auth/info
+  header: Authorization
+  secret: Ou0T8nAGzsF32aah2vwAU1sT+lzi/UMzWXYmAYvkZF4=
+  access-token-validity-in-seconds: 86400  # 24小时
+  refresh-token-validity-in-seconds: 604800  # 24小时 *7
+
+
+logging:
+  operation:
+    url: http://127.0.0.1:8080/api/oper/log/receive
+    enabled: true
+    retention-days: 90
+
+job:
+  operation:
+    url: http://127.0.0.1:8080/api/task/log/receive
+    enabled: true
+    retention-days: 90
+
+
 
 
 # Swagger UI 配置

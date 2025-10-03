@@ -2,8 +2,10 @@ package com.rainbow.system.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.rainbow.base.annotation.Keyword;
 import com.rainbow.base.annotation.OrderBy;
 import com.rainbow.base.annotation.Search;
+import com.rainbow.base.annotation.SearchFilter;
 import com.rainbow.base.entity.BaseEntity;
 import com.rainbow.base.enums.InfoStage;
 import com.rainbow.base.enums.SearchEnum;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "sys_notice_info")
 @org.hibernate.annotations.Table(appliesTo = "sys_notice_info", comment = "通知公告表")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonIgnoreProperties({"fcu","lcd","lcu"})
 public class SysNoticeInfo extends BaseEntity {
 

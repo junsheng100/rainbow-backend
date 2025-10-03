@@ -1,6 +1,8 @@
 package com.rainbow.template.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rainbow.base.annotation.Keyword;
+import com.rainbow.base.annotation.SearchFilter;
 import com.rainbow.base.annotation.UnionKey;
 import com.rainbow.base.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,6 +18,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "template_result")
 @org.hibernate.annotations.Table(appliesTo = "template_result", comment = "模板数据")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TemplateResult extends BaseEntity {
 

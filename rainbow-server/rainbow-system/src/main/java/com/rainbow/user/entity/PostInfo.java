@@ -2,9 +2,8 @@ package com.rainbow.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rainbow.base.annotation.*;
 import com.rainbow.base.annotation.OrderBy;
-import com.rainbow.base.annotation.Search;
-import com.rainbow.base.annotation.UnionKey;
 import com.rainbow.base.entity.BaseEntity;
 import com.rainbow.base.enums.SearchEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,6 +27,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "post_info")
 @org.hibernate.annotations.Table(appliesTo = "post_info", comment = "职位")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"fcd","fcu","lcd","lcu"})
 public class PostInfo extends BaseEntity {

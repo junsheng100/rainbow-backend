@@ -2,7 +2,9 @@ package com.rainbow.files.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rainbow.base.annotation.Keyword;
 import com.rainbow.base.annotation.Search;
+import com.rainbow.base.annotation.SearchFilter;
 import com.rainbow.base.annotation.UnionKey;
 import com.rainbow.base.entity.BaseEntity;
 import com.rainbow.base.enums.ChartEnum;
@@ -26,6 +28,7 @@ import java.math.BigInteger;
 @Entity
 @Table(name = "sys_resource")
 @org.hibernate.annotations.Table(appliesTo = "sys_resource", comment = "系统资源")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"fcd","fcu","lcd","lcu"})
 public class SysResource extends BaseEntity {

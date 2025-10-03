@@ -58,7 +58,6 @@ public class DataManager<Entity extends BaseEntity> {
     }
     Entity entity = vo.getData();
 
-
     if (Objects.nonNull(entity)) {
 
       setSearchFilter(entity);
@@ -371,10 +370,20 @@ public class DataManager<Entity extends BaseEntity> {
     }
 
     addNormal(entity);
+    String fcu = entity.getFcu();
+    String lcu = entity.getLcu();
+    String userName = null;
 
-    String userName = getUserName();
-    entity.setFcu(userName);
-    entity.setLcu(userName);
+    if (StringUtils.isBlank(fcu) || StringUtils.isBlank(lcu)) {
+      userName = getUserName();
+      if (StringUtils.isBlank(fcu)) {
+        entity.setFcu(userName);
+      }
+      if (StringUtils.isBlank(lcu)) {
+        entity.setLcu(userName);
+      }
+    }
+
 
     return entity;
   }

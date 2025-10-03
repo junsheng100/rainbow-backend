@@ -2,9 +2,7 @@ package com.rainbow.files.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.rainbow.base.annotation.OrderBy;
-import com.rainbow.base.annotation.Search;
-import com.rainbow.base.annotation.UnionKey;
+import com.rainbow.base.annotation.*;
 import com.rainbow.base.entity.BaseEntity;
 import com.rainbow.base.enums.SearchEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,6 +22,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "cfg_file_type")
 @org.hibernate.annotations.Table(appliesTo = "cfg_file_type", comment = "文件类型管理")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"fcd","fcu","lcd","lcu"})
 public class FileType extends BaseEntity {

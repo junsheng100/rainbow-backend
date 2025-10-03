@@ -6,6 +6,7 @@ import com.rainbow.base.annotation.OperLog;
 import com.rainbow.base.constant.DataConstant;
 import com.rainbow.base.exception.BaseException;
 import com.rainbow.base.model.base.Result;
+import com.rainbow.base.model.domain.LoginUser;
 import com.rainbow.base.model.vo.OperLogVo;
 import com.rainbow.base.utils.IPUtils;
 import com.rainbow.base.utils.JwtTokenUtil;
@@ -41,7 +42,7 @@ public class OperLogAspect {
   @Autowired
   private HttpServletRequest request;
 
-   @Autowired
+  @Autowired
   private JwtTokenUtil tokenUtil;
 
   @Autowired
@@ -55,18 +56,16 @@ public class OperLogAspect {
     Object data = null;
     try {
       vo = getOperLogVo(joinPoint);
-        data = joinPoint.proceed();
+      data = joinPoint.proceed();
       if (null != vo) {
         String json = null != data ? JSON.toJSONString(data) : "";
-        vo.setJsonResult("数据长度:"+json.length());
+        vo.setJsonResult("数据长度:" + json.length());
       }
     } catch (BaseException e) {
       log.debug(e.getMessage());
       if (null != vo) {
         vo.setErrorMsg(e.getMessage());
         vo.setErrCode(e.getCode());
-        saveLogMess(vo);
-
         return Result.error(e.getCode(), e.getMessage());
       }
     } finally {
@@ -113,10 +112,10 @@ public class OperLogAspect {
 
       /// /////////////////////////
       String tagTitle = tag.name();
-      tagTitle = StringUtils.isBlank(tagTitle)?tag.description():tagTitle;
-      tagTitle = StringUtils.isBlank(tagTitle)?className:tagTitle;
+      tagTitle = StringUtils.isBlank(tagTitle) ? tag.description() : tagTitle;
+      tagTitle = StringUtils.isBlank(tagTitle) ? className : tagTitle;
       /// ////////////////////////
-      String summary =  operation.summary();
+      String summary = operation.summary();
       summary = StringUtils.isBlank(summary) ? operation.description() : summary;
       summary = StringUtils.isBlank(summary) ? operLog.value() : summary;
       summary = StringUtils.isBlank(summary) ? methodName : summary;
@@ -125,7 +124,6 @@ public class OperLogAspect {
 
       // 获取方法名
 
-      String[] parameterNames = signature.getParameterNames();
       Object[] parameterValues = joinPoint.getArgs();
       String ip = IPUtils.getIpAddr(request);
       UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
@@ -136,8 +134,9 @@ public class OperLogAspect {
       String url = request.getRequestURI();
       url = url.length() > 255 ? url.substring(0, 255) : url;
 
-
-      String operName = tokenUtil.getUserName();
+      tokenUtil.getUserId();
+      LoginUser loginUser = tokenUtil.getLoginUser();
+      String operName = loginUser.getUserName();
       String requestMethod = request.getMethod();
       String operParam = JSON.toJSONString(parameterValues);
 

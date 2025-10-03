@@ -2,8 +2,10 @@ package com.rainbow.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rainbow.base.annotation.Keyword;
 import com.rainbow.base.annotation.OrderBy;
 import com.rainbow.base.annotation.Search;
+import com.rainbow.base.annotation.SearchFilter;
 import com.rainbow.base.entity.BaseEntity;
 import com.rainbow.base.enums.SearchEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,6 +30,7 @@ import java.util.List;
 @Entity
 @Table(name = "sys_role")
 @org.hibernate.annotations.Table(appliesTo = "sys_role", comment = "角色信息表")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"fcd","fcu","lcd","lcu"})
 public class SysRole extends BaseEntity {

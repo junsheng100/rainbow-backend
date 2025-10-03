@@ -6,6 +6,7 @@ import com.rainbow.appdoc.model.InterfaceModel;
 import com.rainbow.appdoc.resource.ApiCategoryDao;
 import com.rainbow.appdoc.resource.ApiInterfaceDao;
 import com.rainbow.appdoc.service.ApiInterfaceService;
+import com.rainbow.base.annotation.CacheRead;
 import com.rainbow.base.constant.CacheConstants;
 import com.rainbow.base.service.impl.BaseServiceImpl;
 import com.rainbow.base.utils.CommonUtils;
@@ -16,7 +17,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ApiInterface Service实现
@@ -32,11 +35,12 @@ public class ApiInterfaceServiceImpl extends BaseServiceImpl<AppInterface, Strin
     return super.baseDao.findByCategoryId(categoryId);
   }
 
-  @Cacheable(value = CacheConstants.CACHE_KEY_URL)
+  @CacheRead(NAME = CacheConstants.CACHE_KEY_URL)
   @Override
-  public List<InterfaceModel> getUrlList() {
+  public Map<String, InterfaceModel> getMapUrlList() {
 
-    List<InterfaceModel> list = new ArrayList<>();
+    Map<String, InterfaceModel> map = new LinkedHashMap<>();
+
     List<AppCategory> categoryList = categoryDao.findAll();
     List<AppInterface> interfaceList = baseDao.findAll();
 
@@ -49,12 +53,12 @@ public class ApiInterfaceServiceImpl extends BaseServiceImpl<AppInterface, Strin
           String url = category.getRequestUrl() + "/" + item.getRequestUrl();
           url = url.replace("//", "/");
           model.setRequestUrl(url);
-          list.add(model);
+          map.put(url,model);
         }
 
       });
     }
 
-    return list;
+    return  map;
   }
 }

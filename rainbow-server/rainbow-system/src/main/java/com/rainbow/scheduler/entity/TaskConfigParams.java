@@ -1,7 +1,9 @@
 package com.rainbow.scheduler.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.rainbow.base.annotation.Keyword;
 import com.rainbow.base.annotation.OrderBy;
+import com.rainbow.base.annotation.SearchFilter;
 import com.rainbow.base.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -25,6 +27,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "task_config_params")
 @EqualsAndHashCode(callSuper = true)
 @org.hibernate.annotations.Table(appliesTo = "task_config_params", comment = "任务配置参数")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonIgnoreProperties({"fcd","fcu", "lcd", "lcu"})
 public class TaskConfigParams extends BaseEntity {
 

@@ -12,7 +12,7 @@ import com.rainbow.system.entity.SysDictType;
 import com.rainbow.system.resource.SysDictDataDao;
 import com.rainbow.system.resource.SysDictTypeDao;
 import com.rainbow.system.service.SysDictTypeService;
-import com.rainbow.user.utils.DictUtils;
+import com.rainbow.system.utils.DictUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

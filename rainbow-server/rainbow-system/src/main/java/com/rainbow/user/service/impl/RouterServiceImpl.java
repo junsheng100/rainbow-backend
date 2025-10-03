@@ -5,6 +5,7 @@ import com.rainbow.base.enums.UseStatus;
 import com.rainbow.base.enums.UserType;
 import com.rainbow.base.exception.AuthRoleException;
 import com.rainbow.base.exception.BizException;
+import com.rainbow.base.model.domain.LoginUser;
 import com.rainbow.base.model.router.MetaVo;
 import com.rainbow.base.model.router.RouterVo;
 import com.rainbow.base.utils.JwtTokenUtil;
@@ -55,15 +56,12 @@ public class RouterServiceImpl implements RouterService {
 
   @Override
   public List<RouterVo> getRouters() {
-
-    String userId = jwtTokenUtil.getUserIdFromToken();
-    UserInfo userInfo = userDao.get(userId);
-    String userType = userInfo.getUserType();
-    boolean isAdmin = UserType.ADMIN.name().equals(userType);
+    LoginUser user = jwtTokenUtil.getLoginUser();
+    String userId = user.getUserId();
+    boolean isAdmin = UserType.ADMIN.name().equals(user.getUserType());
 
     List<SysMenu> menuList = isAdmin ? menuDao.findMenuAll() : findMenuListByUserId(userId);
     List<RouterVo> dataList = getRouterPerms(menuList);
-
 
     dataList = dataList.stream().filter(t -> MENU_ROOT.equals(t.getParentId())).collect(Collectors.toList());
 

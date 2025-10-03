@@ -5,11 +5,12 @@ import com.rainbow.appdoc.model.InterfaceModel;
 import com.rainbow.base.service.BaseService;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ApiInterfaceService extends BaseService<AppInterface, String> {
 
 
   List<AppInterface> findByCategoryId(String categoryId);
 
-  List<InterfaceModel> getUrlList();
+   Map<String, InterfaceModel> getMapUrlList();
 }

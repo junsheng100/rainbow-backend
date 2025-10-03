@@ -3,7 +3,9 @@ package com.rainbow.system.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rainbow.base.annotation.Keyword;
 import com.rainbow.base.annotation.OrderBy;
+import com.rainbow.base.annotation.SearchFilter;
 import com.rainbow.base.entity.BaseEntity;
 import com.rainbow.system.enums.PushTimeType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "sys_notice_push")
 @org.hibernate.annotations.Table(appliesTo = "sys_notice_push", comment = "通知公告推送")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"fcd", "fcu", "lcd", "lcu"})
 public class SysNoticePush extends BaseEntity {

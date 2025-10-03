@@ -1,7 +1,9 @@
 package com.rainbow.appdoc.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.rainbow.base.annotation.Keyword;
 import com.rainbow.base.annotation.OrderBy;
+import com.rainbow.base.annotation.SearchFilter;
 import com.rainbow.base.annotation.UnionKey;
 import com.rainbow.base.entity.BaseEntity;
 import lombok.Data;
@@ -22,6 +24,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "app_reference")
 @org.hibernate.annotations.Table(appliesTo = "app_reference", comment = "数据模型")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonIgnoreProperties({"fcu","lcd","lcu"})
 public class AppReference extends BaseEntity {
 

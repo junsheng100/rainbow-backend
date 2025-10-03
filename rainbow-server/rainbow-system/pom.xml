@@ -19,6 +19,12 @@
   </properties>
 
   <dependencies>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
     <!-- 基础模块依赖 -->
     <dependency>
       <groupId>com.rain</groupId>

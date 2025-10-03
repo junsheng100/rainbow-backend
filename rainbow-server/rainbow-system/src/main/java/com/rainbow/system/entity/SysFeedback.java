@@ -2,8 +2,10 @@ package com.rainbow.system.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.rainbow.base.annotation.Keyword;
 import com.rainbow.base.annotation.OrderBy;
 import com.rainbow.base.annotation.Search;
+import com.rainbow.base.annotation.SearchFilter;
 import com.rainbow.base.entity.BaseEntity;
 import com.rainbow.base.enums.SearchEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,6 +23,7 @@ import java.util.Date;
 @Entity
 @Table(name = "sys_feedback")
 @org.hibernate.annotations.Table(appliesTo = "sys_feedback", comment = "意见反馈")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonIgnoreProperties({"fcu","lcd","lcu"})
 public class SysFeedback extends BaseEntity {
 

@@ -3,6 +3,7 @@ package com.rainbow.user.controller;
 import com.rainbow.base.config.JwtConfig;
 import com.rainbow.base.config.RedisTokenStore;
 import com.rainbow.base.constant.DataConstant;
+import com.rainbow.base.enums.UseStatus;
 import com.rainbow.base.exception.NoLoginException;
 import com.rainbow.base.model.base.Result;
 import com.rainbow.base.model.domain.LoginUser;
@@ -74,9 +75,11 @@ public class AuthController {
     // 查找用户
     UserInfo user = userInfoService.findByUserName(request.getUserName());
 
-    if (user == null) {
+    if (user == null)
       throw new NoLoginException("用户名或密码错误");
-    }
+
+    if(!UseStatus.NO.getCode().equals(user.getStatus()))
+      throw new NoLoginException("用户无权限或者被拒绝");
 
     UserPasswd userPasswd = passwdService.getByUserId(user.getUserId());
     if (null == userPasswd) {

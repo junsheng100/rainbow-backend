@@ -1,30 +1,16 @@
 package com.rainbow.files.controller;
 
-import com.alibaba.fastjson2.JSON;
-import com.rainbow.base.annotation.OperLog;
 import com.rainbow.base.controller.BaseController;
-import com.rainbow.base.enums.ChartEnum;
-import com.rainbow.base.exception.BizException;
 import com.rainbow.base.model.base.Result;
-import com.rainbow.base.utils.StringUtils;
+import com.rainbow.files.config.ResourceConfig;
 import com.rainbow.files.entity.SysResource;
 import com.rainbow.files.service.SysResourceService;
-import com.rainbow.system.entity.SysConfig;
-import com.rainbow.system.entity.SysDictData;
-import com.rainbow.files.config.ResourceConfig;
-import com.rainbow.system.service.SysConfigService;
-import com.rainbow.system.service.SysDictDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @RestController

@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * @ClassName SelectEnum
  * @Description TODO
- * @Author shijunliu
+ * @Author QQ:304299340
  * @Date 2021/7/13 9:09 上午
  * @Version 1.0
  */

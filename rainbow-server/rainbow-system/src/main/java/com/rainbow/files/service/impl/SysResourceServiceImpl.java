@@ -4,7 +4,9 @@ import com.alibaba.fastjson2.JSON;
 import com.rainbow.base.enums.ChartEnum;
 import com.rainbow.base.enums.UseStatus;
 import com.rainbow.base.exception.BizException;
+import com.rainbow.base.model.domain.LoginUser;
 import com.rainbow.base.service.impl.BaseServiceImpl;
+import com.rainbow.base.utils.JwtTokenUtil;
 import com.rainbow.base.utils.Md5Utils;
 import com.rainbow.base.utils.RandomId;
 import com.rainbow.files.config.ResourceConfig;
@@ -34,9 +36,10 @@ public class SysResourceServiceImpl extends BaseServiceImpl<SysResource, String,
 
   @Autowired
   private FileTypeDao typeDao;
-
   @Autowired
   private SysConfigDao configDao;
+  @Autowired
+  private JwtTokenUtil tokenUtil;
 
   public static final String FILE_CONFIG = "file_config";
 
@@ -44,9 +47,12 @@ public class SysResourceServiceImpl extends BaseServiceImpl<SysResource, String,
   @SneakyThrows
   @Override
   public String uploadFile(MultipartFile multipartFile) {
+    String typeDir = multipartFile.getContentType();
+    typeDir = typeDir.substring(0, typeDir.lastIndexOf(ChartEnum.SLASH.getCode()));
+
     String srcName = multipartFile.getOriginalFilename();
     String suffix = srcName.substring(srcName.lastIndexOf(ChartEnum.POINT.getCode()) + 1);
-    String fileUrl = DateFormatUtils.format(new Date(), "yyyy/MM/dd") + "/" + RandomId.generateShortUuid(12) + "." + suffix;
+    String fileUrl = typeDir + DateFormatUtils.format(new Date(), "/yyyy/MM/dd") + "/" + RandomId.generateShortUuid(12) + "." + suffix;
 
     uploadFile(multipartFile, fileUrl);
 
@@ -168,6 +174,17 @@ public class SysResourceServiceImpl extends BaseServiceImpl<SysResource, String,
 
   @Override
   public Boolean delete(String id) {
+
+    SysResource data = baseDao.get(id);
+    if (null == data)
+      throw new BizException("数据不存在");
+
+    if (!isAdmin()) {
+      LoginUser user = tokenUtil.getLoginUser();
+      if (!data.getFcu().equals(user))
+        throw new BizException("无权限删除");
+    }
+
     return baseDao.remove(id);
   }
 

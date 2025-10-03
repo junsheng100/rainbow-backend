@@ -1,4 +1,4 @@
-package com.rainbow.user.utils;
+package com.rainbow.system.utils;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.rainbow.base.constant.CacheConstants;

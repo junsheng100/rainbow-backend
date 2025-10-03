@@ -106,10 +106,16 @@ public class BaseServiceImpl<Entity extends BaseEntity, ID extends Serializable,
     if (null == user)
       throw new NoLoginException("请登录系统");
 
-    return UserType.ADMIN.name().equals(user.getUserType());
+    return isAdmin(user);
   }
 
 
+  public boolean isAdmin(LoginUser user)  {
+    if (null == user)
+      throw new NoLoginException("请登录系统");
+
+    return UserType.ADMIN.name().equals(user.getUserType());
+  }
 
 
   @Override

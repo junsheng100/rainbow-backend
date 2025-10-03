@@ -14,7 +14,15 @@ import java.io.Serializable;
 @Data
 public class UserProfile implements Serializable {
 
+  private Long deptId;
+
+  private String deptName;
+
   private String userId;
+
+  private String nickname;
+
+  private String username;
 
   private String avatar;
 }

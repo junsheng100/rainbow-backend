@@ -26,7 +26,7 @@ public interface UserInfoRepository extends BaseRepository<UserInfo, String> {
   @Query("select u from UserInfo u where u.status = '0' and u.userId in (?1) ")
   List<UserInfo> findInUserId(List<String> userIdLit);
 
-  @Query("select u from UserInfo u where u.status = '0' and u.disabled = '0' ")
+  @Query("select u from UserInfo u where u.status = '0' and u.disabled = '0' order by u.fcd")
   List<UserInfo> findUserAll();
 
   @Query("select count(u.userId) from UserInfo u where u.status = '0' and u.disabled = '0' ")
@@ -43,7 +43,11 @@ public interface UserInfoRepository extends BaseRepository<UserInfo, String> {
   @Query("select count(t) from UserInfo  t where t.userType = ?1 and t.userId = ?2 ")
   int isUserType(String name, String userId);
 
+  @Modifying
   @Query("update UserInfo set avatar = ?2 where userId = ?1 ")
   void updateProfile(String userId, String avatar);
+
+  @Query("select u from UserInfo u where u.userId = ?1 ")
+  UserInfo getByUserId(String userId);
 
 }

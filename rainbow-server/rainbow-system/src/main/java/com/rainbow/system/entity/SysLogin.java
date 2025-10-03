@@ -3,7 +3,9 @@ package com.rainbow.system.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rainbow.base.annotation.Keyword;
 import com.rainbow.base.annotation.Search;
+import com.rainbow.base.annotation.SearchFilter;
 import com.rainbow.base.annotation.UnionKey;
 import com.rainbow.base.entity.BaseEntity;
 import com.rainbow.base.enums.SearchEnum;
@@ -24,6 +26,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "sys_login")
 @org.hibernate.annotations.Table(appliesTo = "sys_login", comment = "系统访问记录")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"fcd", "fcu", "lcd", "lcu"})
 public class SysLogin extends BaseEntity {

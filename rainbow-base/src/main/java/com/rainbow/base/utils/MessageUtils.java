@@ -3,7 +3,7 @@ package com.rainbow.base.utils;
 /**
  * @ClassName MessageUtils
  * @Description TODO
- * @Author shijunliu
+ * @Author QQ:304299340
  * @Date 2021/12/16 5:24 下午
  * @Version 1.0
  */

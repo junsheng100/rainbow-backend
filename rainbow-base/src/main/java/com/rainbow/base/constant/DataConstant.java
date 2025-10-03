@@ -62,7 +62,7 @@ public class DataConstant {
   );
 
   public static final List<String> EXCLUDE_REQUEST = Arrays.asList(
-          "/auth",
+          "/auth/**",
           "/login/user",
           "/oper/log",
           "/upload/**"

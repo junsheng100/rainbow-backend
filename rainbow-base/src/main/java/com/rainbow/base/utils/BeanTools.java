@@ -24,7 +24,7 @@ import java.util.Objects;
 /**
  * @ClassName BeanTool
  * @Description TODO
- * @Author shijunliu
+ * @Author QQ:304299340
  * @Date 2021/12/5 2:58 下午
  * @Version 1.0
  */

@@ -1,5 +1,4 @@
 server:
-  port: 8080
   servlet:
     context-path: /api
     multipart:
@@ -7,6 +6,10 @@ server:
       max-file-size: 200MB
       # 设置总上传的文件大小
       max-request-size: 200MB
+  tomcat:
+    basedir: ./.temp
+    max-swallow-size: 200MB
+    max-http-form-post-size: 200MB
 project:
   version: 1.0.0
 
@@ -27,12 +30,13 @@ spring:
   security:
     user:
       name: admin
-      password: none
+      password: 123456
       roles: ADMIN
   freemarker:
     settings:
       recognize_standard_file_extensions: true
-
-
-
-
+  servlet:
+    multipart:
+      location: ./.temp
+      max-file-size: 200MB
+      max-request-size: 200MB

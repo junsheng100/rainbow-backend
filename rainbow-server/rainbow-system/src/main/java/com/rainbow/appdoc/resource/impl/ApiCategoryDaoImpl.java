@@ -3,6 +3,7 @@ package com.rainbow.appdoc.resource.impl;
 import com.rainbow.appdoc.entity.AppCategory;
 import com.rainbow.appdoc.repository.ApiCategoryRepository;
 import com.rainbow.appdoc.resource.ApiCategoryDao;
+import com.rainbow.base.annotation.CacheClean;
 import com.rainbow.base.constant.CacheConstants;
 import com.rainbow.base.enums.UseStatus;
 import com.rainbow.base.model.base.PageData;
@@ -55,12 +56,14 @@ public class ApiCategoryDaoImpl extends BaseDaoImpl<AppCategory, String, ApiCate
   }
 
 
-  @CacheEvict(value = CacheConstants.CACHE_KEY_URL)
+
+  @CacheClean(NAME = CacheConstants.CACHE_KEY_URL)
   @Override
   public AppCategory store(@Valid AppCategory entity) {
     return super.store(entity);
   }
-  @CacheEvict(value = CacheConstants.CACHE_KEY_URL)
+
+  @CacheClean(NAME = CacheConstants.CACHE_KEY_URL) 
   @Override
   public AppCategory save(@Valid AppCategory entity) {
     return super.save(entity);

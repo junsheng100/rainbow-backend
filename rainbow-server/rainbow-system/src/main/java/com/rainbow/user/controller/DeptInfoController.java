@@ -4,15 +4,13 @@ import com.rainbow.base.controller.BaseController;
 import com.rainbow.base.model.base.Result;
 import com.rainbow.base.model.vo.BaseVo;
 import com.rainbow.user.entity.DeptInfo;
+import com.rainbow.user.model.DeptUserTree;
 import com.rainbow.user.model.DeptUserVo;
 import com.rainbow.user.model.UserDeptInfo;
 import com.rainbow.user.service.DeptInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class DeptInfoController extends BaseController<DeptInfo,Long, DeptInfoSe
   }
 
 
-  @Operation(summary = "部门人员列表")
+  @Operation(summary = "人员列表")
   @PostMapping("/user")
   public Result<List<UserDeptInfo>> findUserList(@RequestBody DeptUserVo vo) {
     String pushType = vo.getPushType();
@@ -39,6 +37,14 @@ public class DeptInfoController extends BaseController<DeptInfo,Long, DeptInfoSe
     List<UserDeptInfo> treeList = service.findUserList(pushType,deptIds);
     return Result.success(treeList);
   }
+  @Operation(summary = "部门:人员树")
+  @PostMapping("/user/tree")
+  public Result<List<DeptUserTree>> findDeptUserTree(@RequestParam(name="parentId",required = false,defaultValue = "0") Long parentId) {
+    List<DeptUserTree> treeList = service.findDeptUserTree(parentId);
+    return Result.success(treeList);
+  }
+
+
 
 
 

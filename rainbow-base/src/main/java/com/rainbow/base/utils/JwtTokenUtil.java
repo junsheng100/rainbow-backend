@@ -4,16 +4,15 @@ import com.alibaba.fastjson2.JSON;
 import com.rainbow.base.config.JwtConfig;
 import com.rainbow.base.config.RedisTokenStore;
 import com.rainbow.base.constant.DataConstant;
+import com.rainbow.base.enums.ChartEnum;
 import com.rainbow.base.exception.NoLoginException;
 import com.rainbow.base.model.domain.Account;
 import com.rainbow.base.model.domain.LoginUser;
-import com.sun.org.apache.regexp.internal.RE;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -83,15 +82,17 @@ public class JwtTokenUtil {
   }
 
   public Claims getAllClaimsFromToken(String token) {
-    token = StringUtils.isBlank(token) ? getToken() : cleanToken(token);
+    token = cleanToken(token);
     return Jwts.parser()
             .setSigningKey(config.getSecret())
             .parseClaimsJws(token)
             .getBody();
   }
 
+
   public Claims getAllClaimsFromToken() {
     String token = request.getHeader(config.getHeader());
+    token = cleanToken(token);
     return getAllClaimsFromToken(token);
   }
 
@@ -114,6 +115,7 @@ public class JwtTokenUtil {
     LoginUser user = JSON.parseObject(JSON.toJSONString(claims), LoginUser.class);
     return user;
   }
+
 
   private Boolean isTokenExpired(String token) {
     final Date expiration = getExpirationDateFromToken(token);
@@ -185,6 +187,7 @@ public class JwtTokenUtil {
   }
 
   public boolean validateToken(String token) {
+
     try {
       token = cleanToken(token);
       if (StringUtils.isBlank(token)) {
@@ -201,11 +204,15 @@ public class JwtTokenUtil {
       }
       // 验证 Redis 中存储的 token
       return redisTokenStore.validateToken(userId, token);
+    } catch (io.jsonwebtoken.SignatureException e) {
+      log.error("JWT signature validation failed for token: {}", token);
+      return false;
     } catch (Exception e) {
       log.error("Token validation failed", e);
       return false;
     }
   }
+
 
   public boolean isToken() {
 //    String token = request.getHeader(config.getHeader());
@@ -238,7 +245,7 @@ public class JwtTokenUtil {
   private String getToken() {
     String token = request.getHeader(config.getHeader());
     if (StringUtils.isNotBlank(token)) {
-      token = cleanToken(token);
+      token = token.replace(" ",ChartEnum.BLANK.getCode());
       return token;
     }
     throw new NoLoginException("NOT LOGIN");

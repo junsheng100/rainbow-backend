@@ -3,12 +3,18 @@ package com.rainbow.user.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rainbow.base.annotation.Keyword;
+import com.rainbow.base.annotation.OrderBy;
+import com.rainbow.base.annotation.SearchFilter;
 import com.rainbow.base.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Sort;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,6 +22,8 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "sys_user_info")
+@org.hibernate.annotations.Table(appliesTo = "sys_user_info", comment = "用户表")
+@SearchFilter(@Keyword(key = "status", value = "0"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"fcd","fcu","lcd","lcu"})
 public class UserInfo extends BaseEntity {
@@ -58,6 +66,13 @@ public class UserInfo extends BaseEntity {
   @Column(length = 20)
   @Schema(title = "部门ID", type = "Long")
   private Long deptId;
+
+
+  @Column(length = 11)
+  @NotNull(message = "显示顺序不能为空")
+  @Schema(title = "显示顺序",type = "Integer")
+  @OrderBy(value = Sort.Direction.ASC,INDEX="100")
+  private Integer orderNum;
 
 
   @Column(columnDefinition = "varchar(1) default '0' ")
